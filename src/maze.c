@@ -29,11 +29,12 @@ int worldMap[MAP_WIDTH][MAP_HEIGHT]=
   {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
 };
 
-/* render window (global) */
+/* render window */
 SDL_Window *window = NULL;
 
-/* window renderer (global) */
+/* window renderer */
 SDL_Renderer *renderer = NULL;
+
 
 /**
  * init - initializes SDL, window, and renderer
@@ -41,14 +42,14 @@ SDL_Renderer *renderer = NULL;
  */
 bool init(void)
 {
+
 	/* initialization flag */
 	bool success = true;
 
 	/* initialize SDL */
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
 	{
-		printf("SDL could not initialize! SDL_Error: %s\n",
-		       SDL_GetError());
+		printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
 		success = false;
 	}
 	else
@@ -67,9 +68,8 @@ bool init(void)
 		}
 		else
 		{
-			renderer =
-				SDL_CreateRenderer(window, -1,
-						   SDL_RENDERER_ACCELERATED);
+			renderer = SDL_CreateRenderer(window, -1,
+						      SDL_RENDERER_ACCELERATED);
 			if (renderer == NULL)
 			{
 				printf("Renderer could not be created!");
@@ -83,6 +83,7 @@ bool init(void)
 	printf("Window successfully created\n");
 	return (success);
 }
+
 
 /**
  * main - renders maze
@@ -106,12 +107,12 @@ int main(int argc, char *argv[])
 	int mapX; /* X coordinate of box of map player is currently in */
 	int mapY; /* Y coordinate of box of map player is currently in */
 
-	double sideDistX; /* length of ray from current position to next X side */
-	double sideDistY; /* length of ray from current position to next Y side */
+	double posToNextX; /* length of ray from current position to next X side */
+	double posToNextY; /* length of ray from current position to next Y side */
 
-	double deltaDistX; /* length of ray from X side to next X side */
-	double deltaDistY; /* length of ray from Y side to next Y side */
-	double perpWallDist;
+	double lengthToNextX; /* length of ray from X side to next X side */
+	double lengthToNextY; /* length of ray from Y side to next Y side */
+	double perpWallDist; /* used to calculate length of ray */
 
 	int stepX; /* X direction to step in */
 	int stepY; /* Y direction to step in */
@@ -133,7 +134,7 @@ int main(int argc, char *argv[])
 	SDL_Event event;
 	bool quit; /* main loop flag */
 
-	int x; /* x column counter for raycasting */
+	int x; /* column counter for raycasting */
 
 	posX = 22;
 	posY = 12;
@@ -181,8 +182,8 @@ int main(int argc, char *argv[])
 			mapY = (int)(rayPosY);
 
 			/* sine / cosine functions are cheaper than sqrt - convert? */
-			deltaDistX = sqrt(1 + (rayDirY * rayDirY) / (rayDirX * rayDirX));
-			deltaDistY = sqrt(1 + (rayDirX * rayDirX) / (rayDirY * rayDirY));
+			lengthToNextX = sqrt(1 + (rayDirY * rayDirY) / (rayDirX * rayDirX));
+			lengthToNextY = sqrt(1 + (rayDirX * rayDirX) / (rayDirY * rayDirY));
 
 			hit = 0;
 
@@ -190,37 +191,37 @@ int main(int argc, char *argv[])
 			if (rayDirX < 0)
 			{
 				stepX = -1;
-				sideDistX = (rayPosX - mapX) * deltaDistX;
+				posToNextX = (rayPosX - mapX) * lengthToNextX;
 			}
 			else
 			{
 				stepX = 1;
-				sideDistX = (mapX + 1.0 - rayPosX) * deltaDistX;
+				posToNextX = (mapX + 1.0 - rayPosX) * lengthToNextX;
 			}
 
 			if (rayDirY < 0)
 			{
 				stepY = -1;
-				sideDistY = (rayPosY - mapY) * deltaDistY;
+				posToNextY = (rayPosY - mapY) * lengthToNextY;
 			}
 			else
 			{
 				stepY = 1;
-				sideDistY = (mapY + 1.0 - rayPosY) * deltaDistY;
+				posToNextY = (mapY + 1.0 - rayPosY) * lengthToNextY;
 			}
 
 			while (hit == 0)
 			{
 				/* move to next map square in X or Y direction */
-				if (sideDistX < sideDistY)
+				if (posToNextX < posToNextY)
 				{
-					sideDistX += deltaDistX;
+					posToNextX += lengthToNextX;
 					mapX += stepX;
 					side = 0;
 				}
 				else
 				{
-					sideDistY += deltaDistY;
+					posToNextY += lengthToNextY;
 					mapY += stepY;
 					side = 1;
 				}
@@ -246,17 +247,6 @@ int main(int argc, char *argv[])
 			drawEnd = sliceHeight / 2 + SCREEN_HEIGHT / 2;
 			if (drawEnd >= SCREEN_HEIGHT)
 				drawEnd = SCREEN_HEIGHT - 1;
-
-			/* wall colors */
-			/* SDL_Color color; */
-			/* switch (worldMap[mapX][mapY]) */
-			/* { */
-			/* case 1: color.r = 255; break; */
-			/* case 2: color.g = 255; break; */
-			/* case 3: color.b = 255; break; */
-			/* case 4: color.r, color.g, color.b = 255; break; */
-			/* default: color.g, color.b = 255; break; */
-			/* } */
 
 			if (side == 0)
 				SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
@@ -330,6 +320,7 @@ int main(int argc, char *argv[])
 		/* } */
 	}
 
+	/* close renderer and window */
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
 	SDL_Quit();
