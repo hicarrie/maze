@@ -211,7 +211,6 @@ int main(int argc, char *argv[])
 
 			while (hit == 0)
 			{
-				printf("Raycast moving to next map square\n");
 				/* move to next map square in X or Y direction */
 				if (sideDistX < sideDistY)
 				{
@@ -262,16 +261,14 @@ int main(int argc, char *argv[])
 			if (side == 0)
 				SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
 			else if (side == 1)
-				SDL_SetRenderDrawColor(renderer, 130, 130, 130, SDL_ALPHA_OPAQUE);
+				SDL_SetRenderDrawColor(renderer, 200, 200, 200, SDL_ALPHA_OPAQUE);
 
 			/* draw pixels of wall slice as a vertical line */
-			printf("Before drawing line\n");
 			SDL_RenderDrawLine(renderer, x, drawStart, x, drawEnd);
-			printf("After drawing line\n");
-
-			/* update screen */
-			SDL_RenderPresent(renderer);
 		}
+
+		/* update screen */
+		SDL_RenderPresent(renderer);
 
 		/* /\* timing for input and FPS counter *\/ */
 		/* oldTime = time; */
