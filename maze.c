@@ -1,7 +1,6 @@
 #include "maze.h"
 
-/* world map */
-int worldMap[MAP_WIDTH][MAP_HEIGHT]=
+int map[MAP_WIDTH][MAP_HEIGHT] =
 {
   {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
   {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
@@ -35,15 +34,12 @@ SDL_Window *window = NULL;
 /* window renderer */
 SDL_Renderer *renderer = NULL;
 
-
 /**
  * init - initializes SDL, window, and renderer
  * Return: True on success, False on failure
  */
 bool init(void)
 {
-
-	/* initialization flag */
 	bool success = true;
 
 	/* initialize SDL */
@@ -76,11 +72,8 @@ bool init(void)
 				printf("SDL Error: %s\n", SDL_GetError());
 				success = false;
 			}
-			else
-				SDL_SetRenderDrawColor(renderer, 0x31, 0x5D, 0x5F, 0xFF);
 		}
 	}
-	printf("Window successfully created\n");
 	return (success);
 }
 
@@ -93,6 +86,8 @@ bool init(void)
  */
 int main(int argc, char *argv[])
 {
+	/* int map[MAP_WIDTH][MAP_HEIGHT]; /\* 2D array defining map *\/ */
+
 	double posX, posY; /* X and Y start position */
 	double dirX, dirY; /* initial direction vector */
 	double planeX, planeY; /* camera plane */
@@ -131,20 +126,25 @@ int main(int argc, char *argv[])
 	double oldTime; /*time of previous frame */
 	double frameTime; /* time the frame has taken in seconds */
 
+	const uint8_t *keystate; /* current key state */
+
 	SDL_Event event;
 	bool quit; /* main loop flag */
 
 	int x; /* column counter for raycasting */
 
-	posX = 22;
+	posX = 1;
 	posY = 12;
-	dirX = -1;
-	dirY = 0;
+	dirX = 1;
+	dirY = -0.66;
 	planeX = 0;
 	planeY = 0.66;
 	time = 0;
 	oldTime = 0;
 	quit = false;
+
+	/* parse map file */
+	/* map = parseMap(argv[1]); */
 
 	/* start SDL and create window */
 	init();
@@ -152,7 +152,7 @@ int main(int argc, char *argv[])
 	while (!quit)
 	{
 		/* clear screen */
-		SDL_SetRenderDrawColor(renderer, 0x31, 0x5D, 0x5F, 0xFF);
+		SDL_SetRenderDrawColor(renderer, 0x1E, 0x29, 0x34, 0xFF);
 		SDL_RenderClear(renderer);
 
 		/* cast ray x for every column w */
@@ -170,7 +170,6 @@ int main(int argc, char *argv[])
 					quit = true;
 			}
 
-			printf("Raycast: %d\n", x);
 			/* calculate ray position and direction */
 			cameraX = 2 * x / (double)(SCREEN_WIDTH) - 1;
 			rayPosX = posX;
@@ -187,7 +186,7 @@ int main(int argc, char *argv[])
 
 			hit = 0;
 
-			/* calculate step and initial sideDist */
+			/* calculate step and initial distance from position to X or Y */
 			if (rayDirX < 0)
 			{
 				stepX = -1;
@@ -227,7 +226,7 @@ int main(int argc, char *argv[])
 				}
 
 				/* check if ray hit a wall */
-				if (worldMap[mapX][mapY] > 0)
+				if (map[mapX][mapY] > 0)
 					hit = 1;
 			}
 
@@ -249,7 +248,7 @@ int main(int argc, char *argv[])
 				drawEnd = SCREEN_HEIGHT - 1;
 
 			if (side == 0)
-				SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
+				SDL_SetRenderDrawColor(renderer, 230, 230, 230, SDL_ALPHA_OPAQUE);
 			else if (side == 1)
 				SDL_SetRenderDrawColor(renderer, 200, 200, 200, SDL_ALPHA_OPAQUE);
 
@@ -257,67 +256,64 @@ int main(int argc, char *argv[])
 			SDL_RenderDrawLine(renderer, x, drawStart, x, drawEnd);
 		}
 
+		/* timing for input */
+		oldTime = time;
+		time = SDL_GetTicks();
+		frameTime = (time - oldTime) / 1000.0;
+
 		/* update screen */
 		SDL_RenderPresent(renderer);
 
-		/* /\* timing for input and FPS counter *\/ */
-		/* oldTime = time; */
-		/* time = getTicks(); */
-		/* frameTime = (time - oldTime) / 1000.0; */
-		/* print(1.0 / frameTime); /\* FPS counter *\/ */
-		/* redraw(); */
-		/* cls(); */
+		/* speed modifiers */
+		moveSpeed = frameTime * 5.0; /* constant in squares/second */
+		rotateSpeed = frameTime * 3.0; /* constant in radians/second */
+		keystate = SDL_GetKeyboardState(NULL);
 
-		/* /\* speed modifiers *\/ */
-		/* moveSpeed = frameTime * 5.0; /\* constant in squares/second *\/ */
-		/* rotateSpeed = frameTime = 3.0; /\* constant in radians/second *\/ */
-		/* readKeys(); */
+		/* move forward if no wall in front */
+		if (keystate[SDL_SCANCODE_W])
+		{
+			if (!map[(int)(posX + dirX * moveSpeed)][(int)(posY)])
+				posX += dirX * moveSpeed;
+			if (!map[(int)(posX)][(int)(posY + dirY * moveSpeed)])
+				posY += dirY * moveSpeed;
+		}
 
-		/* /\* move forward if no wall in front *\/ */
-		/* if (event.type == SDL_KEYDOWN && event.key.keysym) */
-		/* { */
-		/* 	if (!worldMap[(int)(posX + dirX * moveSpeed)][(int)(posY)]) */
-		/* 		posX += dirX * moveSpeed; */
-		/* 	if (!worldMap[(int)(posX)][(int)(posY + dirY * moveSpeed)]) */
-		/* 		posY += dirY * moveSpeed; */
-		/* } */
+		/* move backward if no wall behind */
+		if (keystate[SDL_SCANCODE_S])
+		{
+			if (!map[(int)(posX - dirX * moveSpeed)][(int)(posY)])
+				posX -= dirX * moveSpeed;
+			if (!map[(int)(posX)][(int)(posY - dirY * moveSpeed)])
+				posY -= dirY * moveSpeed;
+		}
 
-		/* /\* move backward if no wall behind *\/ */
-		/* if (keyDown(SDLK_DOWN)) */
-		/* { */
-		/* 	if (!worldMap[(int)(posX - dirX * moveSpeed)][(int)(posY)]) */
-		/* 		posX -= dirX * moveSpeed; */
-		/* 	if (!worldMap[(int)(posX)][(int)(posY - dirY * moveSpeed)]) */
-		/* 		posY -= dirY * moveSpeed; */
-		/* } */
+		/* rotate left */
+		if (keystate[SDL_SCANCODE_D])
+		{
+			/* rotate camera direction */
+			oldDirX = dirX;
+			dirX = dirX * cos(rotateSpeed) - dirY * sin(rotateSpeed);
+			dirY = oldDirX * sin(rotateSpeed) + dirY * cos(rotateSpeed);
 
-		/* /\* rotate left *\/ */
-		/* if (keyDown(SDLK_LEFT)) */
-		/* { */
-		/* 	/\* rotate camera direction *\/ */
-		/* 	oldDirX = dirX; */
-		/* 	dirX = dirX * cos(rotateSpeed) - dirY * sin(rotateSpeed); */
-		/* 	dirY = oldDirX * sin(rotateSpeed) + dirY * cos(rotateSpeed); */
+			/* rotate camera plane */
+			oldPlaneX = planeX;
+			planeX = planeX * cos(rotateSpeed) - planeY * sin(rotateSpeed);
+			planeY = oldPlaneX * sin(rotateSpeed) + planeY * cos(rotateSpeed);
+		}
 
-		/* 	/\* rotate camera plane *\/ */
-		/* 	oldPlaneX = planeX; */
-		/* 	planeX = planeX * cos(rotateSpeed) - planeY * sin(rotateSpeed); */
-		/* 	planeY = oldPlaneX * sin(rotateSpeed) + planeY * cos(rotateSpeed); */
-		/* } */
+		/* rotate right */
+		if (keystate[SDL_SCANCODE_A])
+		{
+			/* rotate camera direction */
+			oldDirX = dirX;
+			dirX = dirX * cos(-rotateSpeed) - dirY * sin(-rotateSpeed);
+			dirY = oldDirX * sin(-rotateSpeed) + dirY * cos(-rotateSpeed);
 
-		/* /\* rotate right *\/ */
-		/* if (keyDown(SDLK_RIGHT)) */
-		/* { */
-		/* 	/\* rotate camera direction *\/ */
-		/* 	oldDirX = dirX; */
-		/* 	dirX = dirX * cos(-rotateSpeed) - dirY * sin(-rotateSpeed); */
-		/* 	dirY = oldDirX * sin(-rotateSpeed) + dirY * cos(-rotateSpeed); */
-
-		/* 	/\* rotate camera plane *\/ */
-		/* 	oldPlaneX = planeX; */
-		/* 	planeX = planeX * cos(-rotateSpeed) - planeY * sin(-rotateSpeed); */
-		/* 	planeY = oldPlaneX * sin(-rotateSpeed) + planeY * cos(-rotateSpeed); */
-		/* } */
+			/* rotate camera plane */
+			oldPlaneX = planeX;
+			planeX = planeX * cos(-rotateSpeed) - planeY * sin(-rotateSpeed);
+			planeY = oldPlaneX * sin(-rotateSpeed) + planeY * cos(-rotateSpeed);
+		}
 	}
 
 	/* close renderer and window */
