@@ -177,6 +177,7 @@ int main(int argc, char *argv[])
 			rayDirX = dirX + planeX * cameraX;
 			rayDirY = dirY + planeY * cameraX;
 
+			/* grid position on map */
 			mapX = (int)(rayPosX);
 			mapY = (int)(rayPosY);
 
