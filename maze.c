@@ -1,6 +1,6 @@
 #include "maze.h"
 
-int map[MAP_WIDTH][MAP_HEIGHT] =
+/* int map[MAP_WIDTH][MAP_HEIGHT] =
 {
   {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
   {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
@@ -26,7 +26,7 @@ int map[MAP_WIDTH][MAP_HEIGHT] =
   {1,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
   {1,4,4,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1},
   {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
-};
+  }; */
 
 /* render window */
 SDL_Window *window = NULL;
@@ -86,7 +86,7 @@ bool init(void)
  */
 int main(int argc, char *argv[])
 {
-	/* int map[MAP_WIDTH][MAP_HEIGHT]; /\* 2D array defining map *\/ */
+	int **map; /* 2D array defining map */
 
 	double posX, posY; /* X and Y start position */
 	double dirX, dirY; /* initial direction vector */
@@ -144,7 +144,7 @@ int main(int argc, char *argv[])
 	quit = false;
 
 	/* parse map file */
-	/* map = parseMap(argv[1]); */
+	map = parseMap(argv[1], map);
 
 	/* start SDL and create window */
 	init();
