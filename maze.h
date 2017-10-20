@@ -26,4 +26,7 @@
 bool init(void);
 int **parseMap(const char *filename, int **map);
 
+/* utility functions */
+void freeMap(int **map);
+
 #endif /* MAZE_H */

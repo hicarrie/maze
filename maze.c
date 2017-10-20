@@ -289,12 +289,12 @@ int main(int argc, char *argv[])
 		}
 	}
 
-	/* free map - 2D array */
-
 	/* close renderer and window */
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
 	SDL_Quit();
+
+	freeMap(map);
 
 	return (0);
 }
