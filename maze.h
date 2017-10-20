@@ -13,6 +13,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <math.h>
+#include "global.h" /* global SDL variables */
 
 /* macros */
 #define SCREEN_WIDTH 1280
@@ -23,7 +24,7 @@
 #define MAP_HEIGHT 24
 #define MAP_CHAR_COUNT 1275
 
-bool init(void);
+bool initSDL(void);
 int **parseMap(const char *filename, int **map);
 
 /* utility functions */

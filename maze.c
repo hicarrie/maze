@@ -1,54 +1,8 @@
 #include "maze.h"
 
-/* render window */
-SDL_Window *window = NULL;
-
-/* window renderer */
-SDL_Renderer *renderer = NULL;
-
-/**
- * init - initializes SDL, window, and renderer
- * Return: True on success, False on failure
- */
-bool init(void)
-{
-	bool success = true;
-
-	/* initialize SDL */
-	if (SDL_Init(SDL_INIT_VIDEO) < 0)
-	{
-		printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
-		success = false;
-	}
-	else
-	{
-		/* create window */
-		window = SDL_CreateWindow("Maze",
-					   SDL_WINDOWPOS_UNDEFINED,
-					   SDL_WINDOWPOS_UNDEFINED,
-					   SCREEN_WIDTH, SCREEN_HEIGHT,
-					   SDL_WINDOW_SHOWN);
-		if (window == NULL)
-		{
-			printf("Window could not be created! SDL_Error: %s\n",
-			       SDL_GetError());
-			success = false;
-		}
-		else
-		{
-			renderer = SDL_CreateRenderer(window, -1,
-						      SDL_RENDERER_ACCELERATED);
-			if (renderer == NULL)
-			{
-				printf("Renderer could not be created!");
-				printf("SDL Error: %s\n", SDL_GetError());
-				success = false;
-			}
-		}
-	}
-	return (success);
-}
-
+/* global SDL variables */
+SDL_Window *window;
+SDL_Renderer *renderer;
 
 /**
  * main - renders maze
@@ -81,8 +35,8 @@ int main(int argc, char *argv[])
 	double lengthToNextY; /* length of ray from Y side to next Y side */
 	double perpWallDist; /* used to calculate length of ray */
 
-	int stepX; /* X direction to step in */
-	int stepY; /* Y direction to step in */
+	int stepX; /* X direction to step in - always 1 or -1 */
+	int stepY; /* Y direction to step in - always 1 or -1 */
 
 	int hit; /* check if wall was hit */
 	int side; /* check if wall hit was N/S or E/W */
@@ -119,7 +73,7 @@ int main(int argc, char *argv[])
 	map = parseMap(argv[1], map);
 
 	/* start SDL and create window */
-	init();
+	initSDL();
 
 	while (!quit)
 	{
