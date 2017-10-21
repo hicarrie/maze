@@ -12,6 +12,7 @@ SDL_Renderer *renderer;
  */
 int main(int argc, char *argv[])
 {
+	SDL_Rect ceiling; /* rect for top half of window */
 	int **map; /* 2D array defining map */
 
 	double posX, posY; /* X and Y start position */
@@ -33,7 +34,7 @@ int main(int argc, char *argv[])
 
 	double lengthToNextX; /* length of ray from X side to next X side */
 	double lengthToNextY; /* length of ray from Y side to next Y side */
-	double perpWallDist; /* used to calculate length of ray */
+	double perpWallDist; /* distance from camera to wall  */
 
 	int stepX; /* X direction to step in - always 1 or -1 */
 	int stepY; /* Y direction to step in - always 1 or -1 */
@@ -59,6 +60,11 @@ int main(int argc, char *argv[])
 
 	int x; /* column counter for raycasting */
 
+	ceiling.x = 0;
+	ceiling.y = 0;
+	ceiling.w = SCREEN_WIDTH;
+	ceiling.h = SCREEN_HEIGHT / 2;
+
 	posX = 1;
 	posY = 12;
 	dirX = 1;
@@ -80,6 +86,10 @@ int main(int argc, char *argv[])
 		/* clear screen */
 		SDL_SetRenderDrawColor(renderer, 0x1E, 0x29, 0x34, 0xFF);
 		SDL_RenderClear(renderer);
+
+		/* draw ceiling */
+		SDL_SetRenderDrawColor(renderer, 0x59, 0x85, 0x94, 0xFF);
+		SDL_RenderFillRect(renderer, &ceiling);
 
 		/* cast ray x for every column w */
 		for (x = 0; x < SCREEN_WIDTH; x++)
@@ -107,11 +117,9 @@ int main(int argc, char *argv[])
 			mapX = (int)(rayPosX);
 			mapY = (int)(rayPosY);
 
-			/* sine / cosine functions are cheaper than sqrt - convert? */
+			/* measure distance to next X or Y intersection */
 			lengthToNextX = sqrt(1 + (rayDirY * rayDirY) / (rayDirX * rayDirX));
 			lengthToNextY = sqrt(1 + (rayDirX * rayDirX) / (rayDirY * rayDirY));
-
-			hit = 0;
 
 			/* calculate step and initial distance from position to X or Y */
 			if (rayDirX < 0)
@@ -136,6 +144,7 @@ int main(int argc, char *argv[])
 				posToNextY = (mapY + 1.0 - rayPosY) * lengthToNextY;
 			}
 
+			hit = 0;
 			while (hit == 0)
 			{
 				/* move to next map square in X or Y direction */
@@ -194,6 +203,7 @@ int main(int argc, char *argv[])
 		/* speed modifiers */
 		moveSpeed = frameTime * 5.0; /* constant in squares/second */
 		rotateSpeed = frameTime * 3.0; /* constant in radians/second */
+
 		keystate = SDL_GetKeyboardState(NULL);
 
 		/* move forward if no wall in front */
