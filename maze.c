@@ -25,16 +25,14 @@ int main(int argc, char *argv[])
 	double rayDirX; /* direction of X coordinate of ray position */
 	double rayDirY; /* direction of Y coordinate of ray position */
 
-	SDL_Point player; /* X/Y coordinates of box of maze player is in */
-
 	double posToNextX; /* length of ray from current position to next X side */
 	double posToNextY; /* length of ray from current position to next Y side */
 	double distToNextX; /* length of ray from X side to next X side */
 	double distToNextY; /* length of ray from Y side to next Y side */
 	double distToWall; /* distance from camera to wall  */
 
-	int stepX; /* X direction to step in - always 1 or -1 */
-	int stepY; /* Y direction to step in - always 1 or -1 */
+	SDL_Point map; /* X/Y coordinates of box of maze currently in */
+	SDL_Point step; /* X/Y direction to step in - always 1 or -1 */
 
 	int hit; /* check if wall was hit */
 	int side; /* check if wall hit was N/S or E/W */
@@ -114,8 +112,8 @@ int main(int argc, char *argv[])
 			rayDirY = dirY + planeY * cameraX;
 
 			/* grid position on maze */
-			player.x = (int)(rayPosX);
-			player.y = (int)(rayPosY);
+			map.x = (int)(rayPosX);
+			map.y = (int)(rayPosY);
 
 			/* measure distance to next X or Y intersection */
 			distToNextX = sqrt(1 + (rayDirY * rayDirY) / (rayDirX * rayDirX));
@@ -124,24 +122,24 @@ int main(int argc, char *argv[])
 			/* calculate step and initial distance from position to X or Y */
 			if (rayDirX < 0)
 			{
-				stepX = -1;
-				posToNextX = (rayPosX - player.x) * distToNextX;
+				step.x = -1;
+				posToNextX = (rayPosX - map.x) * distToNextX;
 			}
 			else
 			{
-				stepX = 1;
-				posToNextX = (player.x + 1.0 - rayPosX) * distToNextX;
+				step.x = 1;
+				posToNextX = (map.x + 1.0 - rayPosX) * distToNextX;
 			}
 
 			if (rayDirY < 0)
 			{
-				stepY = -1;
-				posToNextY = (rayPosY - player.y) * distToNextY;
+				step.y = -1;
+				posToNextY = (rayPosY - map.y) * distToNextY;
 			}
 			else
 			{
-				stepY = 1;
-				posToNextY = (player.y + 1.0 - rayPosY) * distToNextY;
+				step.y = 1;
+				posToNextY = (map.y + 1.0 - rayPosY) * distToNextY;
 			}
 
 			hit = 0;
@@ -151,26 +149,26 @@ int main(int argc, char *argv[])
 				if (posToNextX < posToNextY)
 				{
 					posToNextX += distToNextX;
-					player.x += stepX;
+					map.x += step.x;
 					side = 0;
 				}
 				else
 				{
 					posToNextY += distToNextY;
-					player.y += stepY;
+					map.y += step.y;
 					side = 1;
 				}
 
 				/* check if ray hit a wall */
-				if (maze[player.x][player.y] > 0)
+				if (maze[map.x][map.y] > 0)
 					hit = 1;
 			}
 
 			/* calculate distance projected in camera direction */
 			if (side == 0)
-				distToWall = (player.x - rayPosX + (1 - stepX) / 2) / rayDirX;
+				distToWall = (map.x - rayPosX + (1 - step.x) / 2) / rayDirX;
 			else
-				distToWall = (player.y - rayPosY + (1 - stepY) / 2) / rayDirY;
+				distToWall = (map.y - rayPosY + (1 - step.y) / 2) / rayDirY;
 
 			/* calculate height of wall slice to draw on screen */
 			sliceHeight = (int)(SCREEN_HEIGHT / distToWall);
@@ -222,6 +220,24 @@ int main(int argc, char *argv[])
 				posX -= dirX * moveSpeed;
 			if (!maze[(int)(posX)][(int)(posY - dirY * moveSpeed)])
 				posY -= dirY * moveSpeed;
+		}
+
+		/* strafe left */
+		if (keystate[SDL_SCANCODE_Q])
+		{
+			if (!maze[(int)(posX - planeX * moveSpeed)][(int)(posY)])
+				posX -= planeX * moveSpeed;
+			if (!maze[(int)(posX)][(int)(posY - planeY * moveSpeed)])
+				posY -= planeY * moveSpeed;
+		}
+
+		/* strafe right */
+		if (keystate[SDL_SCANCODE_E])
+		{
+			if (!maze[(int)(posX + planeX * moveSpeed)][(int)(posY)])
+				posX += planeX * moveSpeed;
+			if (!maze[(int)(posX)][(int)(posY + planeY * moveSpeed)])
+				posY += planeY * moveSpeed;
 		}
 
 		/* rotate left */
