@@ -37,8 +37,7 @@ bool initSDL(void)
 						      SDL_RENDERER_ACCELERATED);
 			if (renderer == NULL)
 			{
-				printf("Renderer could not be created!");
-				printf("SDL Error: %s\n", SDL_GetError());
+				printf("Renderer could not be created! SDL Error: %s\n", SDL_GetError());
 				success = false;
 			}
 		}
