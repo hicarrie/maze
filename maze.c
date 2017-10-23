@@ -12,7 +12,6 @@ SDL_Renderer *renderer;
  */
 int main(int argc, char *argv[])
 {
-	SDL_Rect ceiling; /* rect for top half of window */
 	int **map; /* 2D array defining map */
 
 	double posX, posY; /* X and Y start position */
@@ -31,10 +30,9 @@ int main(int argc, char *argv[])
 
 	double posToNextX; /* length of ray from current position to next X side */
 	double posToNextY; /* length of ray from current position to next Y side */
-
-	double lengthToNextX; /* length of ray from X side to next X side */
-	double lengthToNextY; /* length of ray from Y side to next Y side */
-	double perpWallDist; /* distance from camera to wall  */
+	double distToNextX; /* length of ray from X side to next X side */
+	double distToNextY; /* length of ray from Y side to next Y side */
+	double distToWall; /* distance from camera to wall  */
 
 	int stepX; /* X direction to step in - always 1 or -1 */
 	int stepY; /* Y direction to step in - always 1 or -1 */
@@ -55,7 +53,9 @@ int main(int argc, char *argv[])
 
 	const uint8_t *keystate; /* current key state */
 
-	SDL_Event event;
+	SDL_Event event; /* event listener */
+	SDL_Rect ceiling; /* rect for top half of window */
+
 	bool quit; /* main loop flag */
 
 	int x; /* column counter for raycasting */
@@ -79,7 +79,8 @@ int main(int argc, char *argv[])
 	map = parseMap(argv[1], map);
 
 	/* start SDL and create window */
-	initSDL();
+	if (!initSDL())
+		return (1);
 
 	while (!quit)
 	{
@@ -118,30 +119,30 @@ int main(int argc, char *argv[])
 			mapY = (int)(rayPosY);
 
 			/* measure distance to next X or Y intersection */
-			lengthToNextX = sqrt(1 + (rayDirY * rayDirY) / (rayDirX * rayDirX));
-			lengthToNextY = sqrt(1 + (rayDirX * rayDirX) / (rayDirY * rayDirY));
+			distToNextX = sqrt(1 + (rayDirY * rayDirY) / (rayDirX * rayDirX));
+			distToNextY = sqrt(1 + (rayDirX * rayDirX) / (rayDirY * rayDirY));
 
 			/* calculate step and initial distance from position to X or Y */
 			if (rayDirX < 0)
 			{
 				stepX = -1;
-				posToNextX = (rayPosX - mapX) * lengthToNextX;
+				posToNextX = (rayPosX - mapX) * distToNextX;
 			}
 			else
 			{
 				stepX = 1;
-				posToNextX = (mapX + 1.0 - rayPosX) * lengthToNextX;
+				posToNextX = (mapX + 1.0 - rayPosX) * distToNextX;
 			}
 
 			if (rayDirY < 0)
 			{
 				stepY = -1;
-				posToNextY = (rayPosY - mapY) * lengthToNextY;
+				posToNextY = (rayPosY - mapY) * distToNextY;
 			}
 			else
 			{
 				stepY = 1;
-				posToNextY = (mapY + 1.0 - rayPosY) * lengthToNextY;
+				posToNextY = (mapY + 1.0 - rayPosY) * distToNextY;
 			}
 
 			hit = 0;
@@ -150,13 +151,13 @@ int main(int argc, char *argv[])
 				/* move to next map square in X or Y direction */
 				if (posToNextX < posToNextY)
 				{
-					posToNextX += lengthToNextX;
+					posToNextX += distToNextX;
 					mapX += stepX;
 					side = 0;
 				}
 				else
 				{
-					posToNextY += lengthToNextY;
+					posToNextY += distToNextY;
 					mapY += stepY;
 					side = 1;
 				}
@@ -168,12 +169,12 @@ int main(int argc, char *argv[])
 
 			/* calculate distance projected in camera direction */
 			if (side == 0)
-				perpWallDist = (mapX - rayPosX + (1 - stepX) / 2) / rayDirX;
+				distToWall = (mapX - rayPosX + (1 - stepX) / 2) / rayDirX;
 			else
-				perpWallDist = (mapY - rayPosY + (1 - stepY) / 2) / rayDirY;
+				distToWall = (mapY - rayPosY + (1 - stepY) / 2) / rayDirY;
 
 			/* calculate height of wall slice to draw on screen */
-			sliceHeight = (int)(SCREEN_HEIGHT / perpWallDist);
+			sliceHeight = (int)(SCREEN_HEIGHT / distToWall);
 
 			/* calculate lowest and highest pixel of wall slice */
 			drawStart = -sliceHeight / 2 + SCREEN_HEIGHT / 2;
