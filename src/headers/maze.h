@@ -13,7 +13,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <math.h>
-#include "global.h" /* global SDL variables */
+#include "global.h" /* global variables */
 
 /* macros */
 #define SCREEN_WIDTH 1280
@@ -24,12 +24,17 @@
 #define MAP_HEIGHT 24
 #define MAP_CHAR_COUNT 1275
 
-bool initSDL(void);
 int **parseMap(const char *filename, int **map);
-void raycaster(int **maze);
-bool eventHandler(int **maze);
 
-/* utility functions */
+bool initSDL(void);
+void closeSDL(void);
+
+void inputHandler(int **maze);
+bool quit(void);
+
+void renderBG(void);
+void raycaster(int **maze);
+
 void freeMap(int **map);
 
 #endif /* MAZE_H */

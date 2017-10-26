@@ -11,7 +11,7 @@ NAME = maze
 RM = rm -f
 
 # Compiler flags
-CFLAGS = -g -w
+CFLAGS = -g -w -Isrc/headers
 
 # Linker flags
 LFLAGS = -lSDL2 -lm

@@ -25,7 +25,7 @@ int **parseMap(const char *filename, int **map)
 		return (NULL);
 
 	i = 0;
-        while (fgets(row, sizeof(row), fp) != NULL)
+	while (fgets(row, sizeof(row), fp) != NULL)
 	{
 		/* if row contains newline character, go to next row */
 		if (strlen(row) <= 1)
@@ -46,8 +46,6 @@ int **parseMap(const char *filename, int **map)
 		}
 		i++;
 	}
-
 	fclose(fp);
-
 	return (map);
 }

@@ -1,8 +1,9 @@
 #include "maze.h"
 
 /**
- * raycaster -
- *
+ * raycaster - casts rays and renders walls
+ * @maze: 2D array defining maze map
+ * Return: void
  */
 void raycaster(int **maze)
 {
@@ -28,7 +29,7 @@ void raycaster(int **maze)
 	int drawStart; /* lowest pixel of wall slice */
 	int drawEnd; /* highest pixel of wall slice */
 
-	int x; /* column counter for raycasting */
+	int x; /* ray counter */
 
 	/* cast ray x for every column w */
 	for (x = 0; x < SCREEN_WIDTH; x++)

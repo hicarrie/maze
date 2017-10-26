@@ -10,22 +10,13 @@ double time;
 
 /**
  * main - renders maze
- * @argc - number of arguments
- * @argv - pointer to array of arguments
+ * @argc: number of arguments
+ * @argv: pointer to array of arguments
  * Return: 0 on success
  */
 int main(int argc, char *argv[])
 {
 	int **maze; /* 2D array defining maze */
-
-	SDL_Rect ceiling; /* rect for top half of window */
-
-	bool quit; /* main loop flag */
-
-	ceiling.x = 0;
-	ceiling.y = 0;
-	ceiling.w = SCREEN_WIDTH;
-	ceiling.h = SCREEN_HEIGHT / 2;
 
 	posX = 1;
 	posY = 12;
@@ -34,36 +25,31 @@ int main(int argc, char *argv[])
 	planeX = 0;
 	planeY = 0.66;
 	time = 0;
-	quit = false;
 
 	/* parse maze file */
 	maze = parseMap(argv[1], maze);
+	if (maze == NULL)
+		return (1);
 
 	/* start SDL and create window */
 	if (!initSDL())
 		return (1);
 
-	while (!quit)
+	/* loops until user exits by ESC or closing window */
+	while (!quit())
 	{
-		/* clear screen */
-		SDL_SetRenderDrawColor(renderer, 0x1E, 0x29, 0x34, 0xFF);
-		SDL_RenderClear(renderer);
+		/* draw ceiling and floor */
+		renderBG();
 
-		/* draw ceiling */
-		SDL_SetRenderDrawColor(renderer, 0x59, 0x85, 0x94, 0xFF);
-		SDL_RenderFillRect(renderer, &ceiling);
-
-		/* handle input */
-		quit = eventHandler(maze);
+		/* handles user input */
+		inputHandler(maze);
 
 		/* cast rays*/
 		raycaster(maze);
 	}
 
 	/* close renderer and window */
-	SDL_DestroyRenderer(renderer);
-	SDL_DestroyWindow(window);
-	SDL_Quit();
+	closeSDL();
 
 	freeMap(maze);
 

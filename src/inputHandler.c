@@ -1,43 +1,25 @@
 #include "maze.h"
 
 /**
- * eventHandler -
- *
+ * inputHandler - checks user input for movement
+ * @maze: 2D array defining maze map
+ * Return: void
  */
-bool eventHandler(int **maze)
+void inputHandler(int **maze)
 {
-	double oldDirX, oldPlaneX; /* previous X direction vector and X plane */
-
-	double moveSpeed; /* constant in squares/second */
-	double rotateSpeed; /* constant in radians/second */
-
-	double oldTime; /*time of previous frame */
-	double frameTime; /* time the frame has taken in seconds */
-
 	const uint8_t *keystate; /* current key state */
+	double oldTime; /* time of previous frame */
+	double frameTime; /* time the frame has taken in seconds */
+	double oldDirX, oldPlaneX; /* previous dirX and planeX */
+	double moveSpeed; /* move speed modifier */
+	double rotateSpeed; /* rotate speed modifier */
 
-	SDL_Event event; /* event listener */
-
-	bool quit; /* main loop flag */
-
-	/* timing for input */
+	keystate = SDL_GetKeyboardState(NULL);
 	oldTime = time;
 	time = SDL_GetTicks();
 	frameTime = (time - oldTime) / 1000.0;
-
-	/* speed modifiers */
-	moveSpeed = frameTime * 5.0; /* constant in squares/second */
-	rotateSpeed = frameTime * 3.0; /* constant in radians/second */
-
-	keystate = SDL_GetKeyboardState(NULL);
-
-	/* check if user exits */
-	while (SDL_PollEvent(&event) != 0)
-	{
-		/* user requests quit */
-		if (event.type == SDL_QUIT || keystate[SDL_SCANCODE_ESCAPE])
-			quit = true;
-	}
+	moveSpeed = frameTime * 5.0;
+	rotateSpeed = frameTime * 3.0;
 
 	/* move forward if no wall in front */
 	if (keystate[SDL_SCANCODE_W])
@@ -101,6 +83,29 @@ bool eventHandler(int **maze)
 		oldPlaneX = planeX;
 		planeX = planeX * cos(-rotateSpeed) - planeY * sin(-rotateSpeed);
 		planeY = oldPlaneX * sin(-rotateSpeed) + planeY * cos(-rotateSpeed);
+	}
+}
+
+/**
+ * quit - checks if user quits
+ * Return: True if user quits, else False
+ */
+bool quit(void)
+{
+	SDL_Event event; /* event listener */
+	bool quit;
+
+	quit = false;
+	while (SDL_PollEvent(&event) != 0)
+	{
+		/* if window's close button is pressed */
+		if (event.type == SDL_QUIT)
+			quit = true;
+
+		/* if ESC is pressed */
+		if (event.type == SDL_KEYDOWN &&
+		    event.key.keysym.sym == SDLK_ESCAPE)
+			quit = true;
 	}
 
 	return (quit);
