@@ -4,5 +4,5 @@
 - SDL
 
 ### Compiling and Running
-- ``gcc -g *.c -w -lSDL2 -lm -o maze `sdl2-config --cflags --libs` ``
+- ``gcc -g -w *.c -lSDL2 -lm -o maze `sdl2-config --cflags --libs` ``
 - `./maze`
