@@ -8,13 +8,13 @@ extern SDL_Window *window;
 extern SDL_Renderer *renderer;
 
 /* X and Y start position */
-extern double posX, posY;
+extern point_t pos;
 
 /* initial direction vector */
-extern double dirX, dirY;
+extern point_t dir;
 
 /* camera plane */
-extern double planeX, planeY;
+extern point_t plane;
 
 /* time of current frame */
 extern double time;

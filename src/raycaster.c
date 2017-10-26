@@ -31,10 +31,10 @@ void raycaster(int **maze)
 	{
 		/* calculate ray position and direction */
 		cameraX = 2 * x / (double)(SCREEN_WIDTH) - 1;
-		rayPos.x = posX;
-		rayPos.y = posY;
-		rayDir.x = dirX + planeX * cameraX;
-		rayDir.y = dirY + planeY * cameraX;
+		rayPos.x = pos.x;
+		rayPos.y = pos.y;
+		rayDir.x = dir.x + plane.x * cameraX;
+		rayDir.y = dir.y + plane.y * cameraX;
 
 		/* grid position on maze */
 		map.x = (int)(rayPos.x);

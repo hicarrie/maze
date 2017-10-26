@@ -13,8 +13,8 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <math.h>
-#include "global.h" /* global variables */
 #include "structs.h" /* struct definitions */
+#include "global.h" /* global variables */
 
 /* macros */
 #define SCREEN_WIDTH 1280
