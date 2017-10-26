@@ -14,11 +14,17 @@ int **parseMap(const char *filename, int **map)
 	int i, j;
 
 	if (filename == NULL)
+	{
+		printf("Usage: ./maze maps/<map_name>\n");
 		return (NULL);
+	}
 
 	fp = fopen(filename, "r");
 	if (fp == NULL)
+	{
+		printf("Map file could not be opened or found\n");
 		return (NULL);
+	}
 
 	map = malloc(sizeof(int *) * MAP_HEIGHT);
 	if (map == NULL)
