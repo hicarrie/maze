@@ -16,7 +16,7 @@ double time;
  */
 int main(int argc, char *argv[])
 {
-	int **maze; /* 2D array defining maze */
+	int **maze; /* 2D array defining maze map */
 
 	/* initial values for global variables */
 	pos.x = 1;
@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
 	if (maze == NULL)
 		return (1);
 
-	/* start SDL and create window */
+	/* start SDL and create window and renderer */
 	if (!initSDL())
 		return (1);
 
@@ -42,14 +42,14 @@ int main(int argc, char *argv[])
 		/* draw ceiling and floor */
 		renderBG();
 
-		/* handles user input */
-		inputHandler(maze);
+		/* draw walls */
+		renderWalls(maze);
 
-		/* cast rays*/
-		raycaster(maze);
+		/* handles user input */
+		input(maze);
 	}
 
-	/* close renderer and window */
+	/* close SDL, renderer, and window */
 	closeSDL();
 
 	freeMap(maze);

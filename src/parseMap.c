@@ -14,11 +14,17 @@ int **parseMap(const char *filename, int **map)
 	int i, j;
 
 	if (filename == NULL)
+	{
+		printf("Usage: ./maze maps/<map_name>\n");
 		return (NULL);
+	}
 
 	fp = fopen(filename, "r");
 	if (fp == NULL)
+	{
+		perror("Map file could not be opened");
 		return (NULL);
+	}
 
 	map = malloc(sizeof(int *) * MAP_HEIGHT);
 	if (map == NULL)
@@ -27,7 +33,7 @@ int **parseMap(const char *filename, int **map)
 	i = 0;
 	while (fgets(row, sizeof(row), fp) != NULL)
 	{
-		/* if row contains newline character, go to next row */
+		/* if row contains only newline character, go to next row */
 		if (strlen(row) <= 1)
 			continue;
 
