@@ -14,6 +14,7 @@
 #include <fcntl.h>
 #include <math.h>
 #include "global.h" /* global variables */
+#include "structs.h" /* struct definitions */
 
 /* macros */
 #define SCREEN_WIDTH 1280
@@ -24,6 +25,7 @@
 #define MAP_HEIGHT 24
 #define MAP_CHAR_COUNT 1275
 
+/* function declarations */
 int **parseMap(const char *filename, int **map);
 
 bool initSDL(void);
