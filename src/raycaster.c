@@ -8,15 +8,10 @@
 void raycaster(int **maze)
 {
 	double cameraX; /* X coordinate in camera space */
-	double rayPosX; /* X coordinate of ray position */
-	double rayPosY; /* Y coordinate of ray position */
-	double rayDirX; /* direction of X coordinate of ray position */
-	double rayDirY; /* direction of Y coordinate of ray position */
-
-	double posToNextX; /* length of ray from current position to next X side */
-	double posToNextY; /* length of ray from current position to next Y side */
-	double distToNextX; /* length of ray from X side to next X side */
-	double distToNextY; /* length of ray from Y side to next Y side */
+	point_t rayPos; /* X/Y coordinates of ray position */
+	point_t rayDir; /* direction of X/Y coordinates of ray position */
+	point_t posToNext; /* length of ray from current position to next X/Y sides */
+	point_t distToNext; /* length of ray from X/Y side to next X/Y side */
 	double distToWall; /* distance from camera to wall  */
 
 	SDL_Point map; /* X/Y coordinates of box of maze currently in */
@@ -36,55 +31,55 @@ void raycaster(int **maze)
 	{
 		/* calculate ray position and direction */
 		cameraX = 2 * x / (double)(SCREEN_WIDTH) - 1;
-		rayPosX = posX;
-		rayPosY = posY;
-		rayDirX = dirX + planeX * cameraX;
-		rayDirY = dirY + planeY * cameraX;
+		rayPos.x = pos.x;
+		rayPos.y = pos.y;
+		rayDir.x = dir.x + plane.x * cameraX;
+		rayDir.y = dir.y + plane.y * cameraX;
 
 		/* grid position on maze */
-		map.x = (int)(rayPosX);
-		map.y = (int)(rayPosY);
+		map.x = (int)(rayPos.x);
+		map.y = (int)(rayPos.y);
 
 		/* measure distance to next X or Y intersection */
-		distToNextX = sqrt(1 + (rayDirY * rayDirY) / (rayDirX * rayDirX));
-		distToNextY = sqrt(1 + (rayDirX * rayDirX) / (rayDirY * rayDirY));
+		distToNext.x = sqrt(1 + (pow(rayDir.y, 2)) / pow(rayDir.x, 2));
+		distToNext.y = sqrt(1 + (pow(rayDir.x, 2)) / pow(rayDir.y, 2));
 
 		/* calculate step and initial distance from position to X or Y */
-		if (rayDirX < 0)
+		if (rayDir.x < 0)
 		{
 			step.x = -1;
-			posToNextX = (rayPosX - map.x) * distToNextX;
+			posToNext.x = (rayPos.x - map.x) * distToNext.x;
 		}
 		else
 		{
 			step.x = 1;
-			posToNextX = (map.x + 1.0 - rayPosX) * distToNextX;
+			posToNext.x = (map.x + 1.0 - rayPos.x) * distToNext.x;
 		}
 
-		if (rayDirY < 0)
+		if (rayDir.y < 0)
 		{
 			step.y = -1;
-			posToNextY = (rayPosY - map.y) * distToNextY;
+			posToNext.y = (rayPos.y - map.y) * distToNext.y;
 		}
 		else
 		{
 			step.y = 1;
-			posToNextY = (map.y + 1.0 - rayPosY) * distToNextY;
+			posToNext.y = (map.y + 1.0 - rayPos.y) * distToNext.y;
 		}
 
 		hit = 0;
 		while (hit == 0)
 		{
 			/* move to next maze square in X or Y direction */
-			if (posToNextX < posToNextY)
+			if (posToNext.x < posToNext.y)
 			{
-				posToNextX += distToNextX;
+				posToNext.x += distToNext.x;
 				map.x += step.x;
 				side = 0;
 			}
 			else
 			{
-				posToNextY += distToNextY;
+				posToNext.y += distToNext.y;
 				map.y += step.y;
 				side = 1;
 			}
@@ -96,9 +91,9 @@ void raycaster(int **maze)
 
 		/* calculate distance projected in camera direction */
 		if (side == 0)
-			distToWall = (map.x - rayPosX + (1 - step.x) / 2) / rayDirX;
+			distToWall = (map.x - rayPos.x + (1 - step.x) / 2) / rayDir.x;
 		else
-			distToWall = (map.y - rayPosY + (1 - step.y) / 2) / rayDirY;
+			distToWall = (map.y - rayPos.y + (1 - step.y) / 2) / rayDir.y;
 
 		/* calculate height of wall slice to draw on screen */
 		sliceHeight = (int)(SCREEN_HEIGHT / distToWall);

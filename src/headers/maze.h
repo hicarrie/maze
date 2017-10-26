@@ -13,6 +13,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <math.h>
+#include "structs.h" /* struct definitions */
 #include "global.h" /* global variables */
 
 /* macros */
@@ -24,6 +25,7 @@
 #define MAP_HEIGHT 24
 #define MAP_CHAR_COUNT 1275
 
+/* function declarations */
 int **parseMap(const char *filename, int **map);
 
 bool initSDL(void);

@@ -3,9 +3,9 @@
 /* global variables */
 SDL_Window *window;
 SDL_Renderer *renderer;
-double posX, posY;
-double dirX, dirY;
-double planeX, planeY;
+point_t pos;
+point_t dir;
+point_t plane;
 double time;
 
 /**
@@ -18,12 +18,13 @@ int main(int argc, char *argv[])
 {
 	int **maze; /* 2D array defining maze */
 
-	posX = 1;
-	posY = 12;
-	dirX = 1;
-	dirY = -0.66;
-	planeX = 0;
-	planeY = 0.66;
+	/* initial values for global variables */
+	pos.x = 1;
+	pos.y = 12;
+	dir.x = 1;
+	dir.y = -0.66;
+	plane.x = 0;
+	plane.y = 0.66;
 	time = 0;
 
 	/* parse maze file */
