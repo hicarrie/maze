@@ -22,7 +22,7 @@ int **parseMap(const char *filename, int **map)
 	fp = fopen(filename, "r");
 	if (fp == NULL)
 	{
-		printf("Map file could not be opened or found\n");
+		perror("Map file could not be opened");
 		return (NULL);
 	}
 
