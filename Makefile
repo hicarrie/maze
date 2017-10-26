@@ -2,7 +2,7 @@
 CC = gcc
 
 # Source files
-SRC = *.c
+SRC = src/*.c
 
 # Executable name
 NAME = maze

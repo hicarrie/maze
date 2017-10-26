@@ -26,6 +26,8 @@
 
 bool initSDL(void);
 int **parseMap(const char *filename, int **map);
+void raycaster(int **maze);
+bool eventHandler(int **maze);
 
 /* utility functions */
 void freeMap(int **map);
