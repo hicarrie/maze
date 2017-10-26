@@ -43,10 +43,10 @@ int main(int argc, char *argv[])
 		renderBG();
 
 		/* draw walls */
-		raycaster(maze);
+		renderWalls(maze);
 
 		/* handles user input */
-		inputHandler(maze);
+		input(maze);
 	}
 
 	/* close SDL, renderer, and window */

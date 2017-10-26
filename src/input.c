@@ -5,7 +5,7 @@
  * @maze: 2D array defining maze map
  * Return: void
  */
-void inputHandler(int **maze)
+void input(int **maze)
 {
 	const uint8_t *keystate; /* current key state */
 	double oldTime; /* time of previous frame */

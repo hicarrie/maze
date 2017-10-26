@@ -33,7 +33,7 @@ int **parseMap(const char *filename, int **map)
 	i = 0;
 	while (fgets(row, sizeof(row), fp) != NULL)
 	{
-		/* if row contains newline character, go to next row */
+		/* if row contains only newline character, go to next row */
 		if (strlen(row) <= 1)
 			continue;
 
