@@ -1,6 +1,6 @@
 # 3D Maze
 ### Creating a 3D maze with raycasting
-
+![untextured_1](https://github.com/hicarrie/maze/blob/master/screenshots/untextured_1.png)
 -----
 
 ### How to Compile and Run
@@ -21,6 +21,8 @@ This 3D maze uses raycasting to draw the maze walls, utilizing [LodeV's](http://
 - `D` : rotate camera right
 - `Q` : strafe left
 - `E` : strafe right
+
+![untextured_1](https://github.com/hicarrie/maze/blob/master/screenshots/untextured_2.png)
 
 #### Maps
 The maps are defined in 2D arrays in text files, which are parsed when passed as an argument to the maze executable. `0` represents open space, all other integers are drawn as walls.
