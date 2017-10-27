@@ -1,16 +1,14 @@
 # 3D Maze
 ## Creating a 3D maze with raycasting
 
-### Libraries
-- SDL2
-
-### Compiling and Running
-- Compiled with `gcc 4.8.4` with the following flags:
- - ``gcc -g -w -Isrc/headers *.c -lSDL2 -lm -o maze `sdl2-config --cflags --libs` `` OR `make -f Makefile`
-- To run the maze: `./maze maps/<map_name>`
+### Compiling and Ruunning
+- [SDL2](https://www.libsdl.org/download-2.0.php) is required to compile and use this program
+- Compile with `gcc 4.8.4` with the following flags:
+    ``gcc -g -w -Isrc/headers *.c -lSDL2 -lm -o maze `sdl2-config --cflags --libs` `` OR `make -f Makefile`
+- Run the maze: `./maze maps/<map_name>`
 
 ### Synopsis
-This 3D maze uses raycasting to draw the maze walls, utilizing [LodeV's](http://lodev.org/cgtutor/raycasting.html) method of using vectors rather than Euclidian angles to calculate ray length. Currently the maze has flat colors; textured walls are a work in progress.
+This 3D maze uses raycasting to draw the maze walls, utilizing [LodeV's](http://lodev.org/cgtutor/raycasting.html) method of using vectors to calculate ray length. Currently the maze has flat colors; textured walls are a work in progress.
 
 #### Movement
 - `W` : move forward
@@ -54,6 +52,7 @@ Example:
 ### Upcoming Features
 - Textured walls, ceiling, and floor
 - Enemies / obstacles
+- Goals
 
 ### Resources
 - [SDL2 API](https://wiki.libsdl.org/CategoryAPI)
