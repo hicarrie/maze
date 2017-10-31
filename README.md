@@ -6,7 +6,7 @@
 ### How to Compile and Run
 - [SDL2](https://www.libsdl.org/download-2.0.php) is required to compile and use this program
 - Compile with `gcc 4.8.4` with the following flags:
-    ``gcc -g -w -Isrc/headers *.c -lSDL2 -lm -o maze `sdl2-config --cflags --libs` `` OR `make -f Makefile`
+    ``gcc -O2 -g -w -Isrc/headers *.c -lSDL2 -lm -o maze `sdl2-config --cflags --libs` `` OR `make -f Makefile`
 - Run the maze: `./maze maps/<map_name>`
 
 -----

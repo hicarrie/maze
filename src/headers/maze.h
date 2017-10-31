@@ -25,18 +25,16 @@
 #define MAP_HEIGHT 24
 #define MAP_CHAR_COUNT 1275
 
-int **parseMap(const char *filename, int **map);
+int **parseMap(const char *filename, int *map);
 
 bool initSDL(void);
 void closeSDL(void);
 
-void input(int **maze);
+void input(int *maze);
 bool quit(void);
 
 void renderBG(void);
-void renderWalls(int **maze);
+void renderWalls(int *maze);
 void drawSlice(double distToWall, int x, int side);
-
-void freeMap(int **map);
 
 #endif /* MAZE_H */
