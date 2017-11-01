@@ -6,7 +6,7 @@
  * @map: 2D array of map information
  * Return: pointer to 2D array containing map information
  */
-int **parseMap(const char *filename, int **map)
+int **parseMap(const char *filename, int *map)
 {
 	FILE *fp;
 	char row[MAP_WIDTH * 2]; /* multiply by 2 to account for spaces in map file */
@@ -26,7 +26,7 @@ int **parseMap(const char *filename, int **map)
 		return (NULL);
 	}
 
-	map = malloc(sizeof(int *) * MAP_HEIGHT);
+	map = malloc(sizeof(int) * MAP_HEIGHT * MAP_WIDTH);
 	if (map == NULL)
 		return (NULL);
 
@@ -37,16 +37,12 @@ int **parseMap(const char *filename, int **map)
 		if (strlen(row) <= 1)
 			continue;
 
-		map[i] = malloc(sizeof(int) * MAP_WIDTH);
-		if (map[i] == NULL)
-			return (NULL);
-
 		number = strtok(row, "\n ");
 
 		j = 0;
 		while (number != NULL)
 		{
-			map[i][j] = atoi(number);
+			map[i * MAP_WIDTH + j] = atoi(number);
 			number = strtok(NULL, "\n ");
 			j++;
 		}

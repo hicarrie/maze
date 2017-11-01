@@ -16,7 +16,7 @@ double time;
  */
 int main(int argc, char *argv[])
 {
-	int **maze; /* 2D array defining maze map */
+	int *maze; /* 2D array defining maze map */
 
 	/* initial values for global variables */
 	pos.x = 1;
@@ -31,7 +31,6 @@ int main(int argc, char *argv[])
 	maze = parseMap(argv[1], maze);
 	if (maze == NULL)
 		return (1);
-
 	/* start SDL and create window and renderer */
 	if (!initSDL())
 		return (1);
@@ -52,7 +51,7 @@ int main(int argc, char *argv[])
 	/* close SDL, renderer, and window */
 	closeSDL();
 
-	freeMap(maze);
+	free(maze);
 
 	return (0);
 }

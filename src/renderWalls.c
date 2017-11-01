@@ -5,7 +5,7 @@
  * @maze: 2D array defining maze map
  * Return: void
  */
-void renderWalls(int **maze)
+void renderWalls(int *maze)
 {
 	double cameraX; /* X coordinate in camera space */
 	point_t rayPos; /* X/Y coordinates of ray position */
@@ -81,7 +81,7 @@ void renderWalls(int **maze)
 			}
 
 			/* check if ray hit a wall */
-			if (maze[map.x][map.y] > 0)
+			if (*((int *)maze + map.x * MAP_WIDTH + map.y) > 0)
 				hit = 1;
 		}
 
