@@ -20,7 +20,7 @@ void renderWalls(int *maze)
 	int hit; /* check if wall was hit */
 	int side; /* check if wall hit was N/S or E/W */
 
-	int x; /* ray counter */
+	int x, j; /* ray counter */
 
 	/* cast ray x for every column w */
 	for (x = 0; x < SCREEN_WIDTH; x++)
@@ -92,11 +92,25 @@ void renderWalls(int *maze)
 			distToWall = (map.y - rayPos.y + (1 - step.y) / 2) / rayDir.y;
 
 		/* draw wall slice */
-		drawSlice(distToWall, x, side);
+		drawSlice(maze, map, rayPos, rayDir, distToWall, x, side);
 	}
+
+	/* draw buffer */
+	SDL_UpdateTexture(texture, NULL, buffer, SCREEN_WIDTH * 4);
+	SDL_RenderClear(renderer);
+	SDL_RenderCopy(renderer, texture, NULL, NULL);
 
 	/* update screen */
 	SDL_RenderPresent(renderer);
+
+	/* clear buffer */
+	for (x = 0; x < SCREEN_WIDTH; x++)
+	{
+		for (j = 0; j < SCREEN_HEIGHT; j++)
+		{
+			buffer[j][x] = 0;
+		}
+	}
 }
 
 
@@ -106,11 +120,16 @@ void renderWalls(int *maze)
  * @x: number of ray casted
  * Return: void
  */
-void drawSlice(double distToWall, int x, int side)
+void drawSlice(int *maze, SDL_Point map, point_t rayPos, point_t rayDir, double distToWall, int x, int side)
 {
 	int sliceHeight; /* height of wall slice to draw */
 	int drawStart; /* lowest pixel of wall slice */
 	int drawEnd; /* highest pixel of wall slice */
+	int tileIndex; /* tile number of current map location */
+	double wallX; /* where wall was hit */
+	SDL_Point tex; /* X/Y coordinate of pixel of texture */
+	uint32_t color; /* color of pixel */
+	int y;
 
 	/* calculate height of wall slice to draw on screen */
 	sliceHeight = (int)(SCREEN_HEIGHT / distToWall);
@@ -124,12 +143,33 @@ void drawSlice(double distToWall, int x, int side)
 	if (drawEnd >= SCREEN_HEIGHT)
 		drawEnd = SCREEN_HEIGHT - 1;
 
-	/* set wall colors depending if it's N/S or W/E */
-	if (side == 0)
-		SDL_SetRenderDrawColor(renderer, 0xF7, 0xF7, 0xF7, 0xFF);
-	else if (side == 1)
-		SDL_SetRenderDrawColor(renderer, 0xDE, 0xDE, 0xDE, 0xFF);
+	tileIndex = *((int *)maze + map.x * MAP_WIDTH + map.y) - 1;
 
-	/* draw pixels of wall slice as a vertical line */
-	SDL_RenderDrawLine(renderer, x, drawStart, x, drawEnd);
+	if (side == 0)
+		wallX = rayPos.y + distToWall * rayDir.y;
+	else if (side == 1)
+		wallX = rayPos.x + distToWall * rayDir.x;
+
+	/* floor returns the largest integer value less than or equal to wallX */
+	wallX -= floor(wallX);
+
+	/* get X coordinate of texture corresponding to ray hit */
+	tex.x = (int)(wallX * (double)TEX_WIDTH);
+	if (side == 0 && rayDir.x > 0)
+		tex.x = TEX_WIDTH - tex.x - 1;
+	if (side == 1 && rayDir.y < 0)
+		tex.x = TEX_WIDTH - tex.x - 1;
+
+	for (y = drawStart; y < drawEnd; y++)
+	{
+		if (x > SCREEN_WIDTH | y > SCREEN_HEIGHT)
+			return;
+		tex.y = ((((y << 1) - SCREEN_HEIGHT + sliceHeight) << (int)log2(TEX_HEIGHT)) / sliceHeight) >> 1;
+		color = tiles[tileIndex][tex.x][tex.y];
+		/* change brightness of color if the wall depending on wall side */
+		if (side == 1)
+			color = (color >> 1) & 8355311;
+
+		buffer[y][x] = color;
+	}
 }

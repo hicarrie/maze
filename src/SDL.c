@@ -38,6 +38,13 @@ bool initSDL(void)
 		success = false;
 	}
 
+	texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, SCREEN_WIDTH, SCREEN_HEIGHT);
+	if (texture == NULL)
+	{
+		printf("Texture could not be initialized! SDL Error: %s\n", SDL_GetError());
+		success = false;
+	}
+
 	return (success);
 }
 

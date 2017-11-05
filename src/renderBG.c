@@ -8,6 +8,7 @@ void renderBG(void)
 {
 	SDL_Rect ceiling; /* rect for top half of window */
 	SDL_Rect floor; /* rect for bottom half of window */
+	int i, j;
 
 	ceiling.x = 0;
 	ceiling.y = 0;
@@ -20,10 +21,16 @@ void renderBG(void)
 	floor.h = SCREEN_HEIGHT / 2;
 
 	/* draw ceiling */
-	SDL_SetRenderDrawColor(renderer, 0x59, 0x85, 0x94, 0xFF);
-	SDL_RenderFillRect(renderer, &ceiling);
+	for (i = ceiling.x; i < ceiling.x + ceiling.w; i++)
+	{
+		for (j = ceiling.y; j < ceiling.y + ceiling.h; j++)
+			buffer[j][i] = 0;
+	}
 
 	/* draw floor */
-	SDL_SetRenderDrawColor(renderer, 0x1E, 0x29, 0x34, 0xFF);
-	SDL_RenderFillRect(renderer, &floor);
+	for (i = floor.x; i < floor.x + floor.w; i++)
+	{
+		for (j = floor.y; j < floor.y + floor.h; j++)
+			buffer[j][i] = 1;
+	}
 }
