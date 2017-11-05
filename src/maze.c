@@ -20,7 +20,6 @@ double time;
 int main(int argc, char *argv[])
 {
 	int *maze; /* 2D array defining maze map */
-	int i, j, k, x, y; /* loop counters */
 
 	/* initial values for global variables */
 	pos.x = 1;
@@ -36,7 +35,6 @@ int main(int argc, char *argv[])
 	if (maze == NULL)
 		return (1);
 
-	/* load textures */
         loadTextures();
 
 	/* start SDL and create window and renderer */
@@ -52,19 +50,6 @@ int main(int argc, char *argv[])
 		/* draw walls */
 	        renderWalls(maze);
 
-		/* draw buffer */
-		SDL_UpdateTexture(texture, NULL, buffer, SCREEN_WIDTH * 4);
-		SDL_RenderClear(renderer);
-		SDL_RenderCopy(renderer, texture, NULL, NULL);
-
-		/* clear buffer */
-		for (x = 0; x < SCREEN_WIDTH; x++)
-		{
-			for (j = 0; j < SCREEN_HEIGHT; j++)
-			{
-				buffer[j][x] = 0;
-			}
-		}
 
 		/* handles user input */
 		input(maze);

@@ -51,6 +51,32 @@ bool initSDL(void)
 	return (success);
 }
 
+/**
+ * updateRenderer - updates renderer with updated buffer / texture
+ * Return: void
+ */
+void updateRenderer(void)
+{
+	int x, y; /* loop counters */
+
+	/* draw buffer to renderer */
+	SDL_UpdateTexture(texture, NULL, buffer, SCREEN_WIDTH * 4);
+	SDL_RenderClear(renderer);
+	SDL_RenderCopy(renderer, texture, NULL, NULL);
+
+	/* clear buffer */
+	for (x = 0; x < SCREEN_WIDTH; x++)
+	{
+		for (y = 0; y < SCREEN_HEIGHT; y++)
+		{
+			buffer[y][x] = 0;
+		}
+	}
+
+	/* update screen */
+	SDL_RenderPresent(renderer);
+}
+
 
 /**
  * closeSDL - closes renderer and window

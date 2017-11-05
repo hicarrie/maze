@@ -8,9 +8,9 @@
 void renderWalls(int *maze)
 {
 	double cameraX; /* X coordinate in camera space */
-	point_t rayPos; /* X/Y coordinates of ray position */
-	point_t rayDir; /* direction of X/Y coordinates of ray position */
-	point_t posToNext; /* length of ray from current position to next X/Y sides */
+	point_t rayPos; /* X/Y coordinates of ray pos */
+	point_t rayDir; /* direction of X/Y coordinates of ray pos */
+	point_t posToNext; /* length of ray from current pos to next X/Y sides */
 	point_t distToNext; /* length of ray from X/Y side to next X/Y side */
 	double distToWall; /* distance from camera to wall  */
 
@@ -95,22 +95,8 @@ void renderWalls(int *maze)
 		drawSlice(maze, map, rayPos, rayDir, distToWall, x, side);
 	}
 
-	/* draw buffer */
-	SDL_UpdateTexture(texture, NULL, buffer, SCREEN_WIDTH * 4);
-	SDL_RenderClear(renderer);
-	SDL_RenderCopy(renderer, texture, NULL, NULL);
-
-	/* update screen */
-	SDL_RenderPresent(renderer);
-
-	/* clear buffer */
-	for (x = 0; x < SCREEN_WIDTH; x++)
-	{
-		for (j = 0; j < SCREEN_HEIGHT; j++)
-		{
-			buffer[j][x] = 0;
-		}
-	}
+	/* draw updated buffer to renderer */
+	updateRenderer();
 }
 
 
@@ -120,7 +106,8 @@ void renderWalls(int *maze)
  * @x: number of ray casted
  * Return: void
  */
-void drawSlice(int *maze, SDL_Point map, point_t rayPos, point_t rayDir, double distToWall, int x, int side)
+void drawSlice(int *maze, SDL_Point map, point_t rayPos, point_t rayDir,
+	       double distToWall, int x, int side)
 {
 	int sliceHeight; /* height of wall slice to draw */
 	int drawStart; /* lowest pixel of wall slice */
@@ -150,7 +137,7 @@ void drawSlice(int *maze, SDL_Point map, point_t rayPos, point_t rayDir, double 
 	else if (side == 1)
 		wallX = rayPos.x + distToWall * rayDir.x;
 
-	/* floor returns the largest integer value less than or equal to wallX */
+	/* floor returns the largest integer value <= to wallX */
 	wallX -= floor(wallX);
 
 	/* get X coordinate of texture corresponding to ray hit */
@@ -164,9 +151,12 @@ void drawSlice(int *maze, SDL_Point map, point_t rayPos, point_t rayDir, double 
 	{
 		if (x > SCREEN_WIDTH | y > SCREEN_HEIGHT)
 			return;
-		tex.y = ((((y << 1) - SCREEN_HEIGHT + sliceHeight) << (int)log2(TEX_HEIGHT)) / sliceHeight) >> 1;
+		tex.y = ((((y << 1) - SCREEN_HEIGHT + sliceHeight) <<
+			  (int)log2(TEX_HEIGHT)) / sliceHeight) >> 1;
+
 		color = tiles[tileIndex][tex.x][tex.y];
-		/* change brightness of color if the wall depending on wall side */
+
+		/* change color of the wall depending on wall side */
 		if (side == 1)
 			color = (color >> 1) & 8355311;
 

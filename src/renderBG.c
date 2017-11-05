@@ -24,13 +24,13 @@ void renderBG(void)
 	for (i = ceiling.x; i < ceiling.x + ceiling.w; i++)
 	{
 		for (j = ceiling.y; j < ceiling.y + ceiling.h; j++)
-			buffer[j][i] = 0;
+			buffer[j][i] = 16775930;
 	}
 
 	/* draw floor */
 	for (i = floor.x; i < floor.x + floor.w; i++)
 	{
 		for (j = floor.y; j < floor.y + floor.h; j++)
-			buffer[j][i] = 1;
+			buffer[j][i] = 0;
 	}
 }
