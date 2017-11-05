@@ -20,8 +20,6 @@ double time;
 int main(int argc, char *argv[])
 {
 	int *maze; /* 2D array defining maze map */
-	SDL_Surface *texSrc[TEX_COUNT]; /* array of loaded textures */
-	uint8_t *pixel;
 	int i, j, k, x, y; /* loop counters */
 
 	/* initial values for global variables */
@@ -39,27 +37,7 @@ int main(int argc, char *argv[])
 		return (1);
 
 	/* load textures */
-	texSrc[0] = IMG_Load("textures/eagle.png");
-	texSrc[1] = IMG_Load("textures/redbrick.png");
-	texSrc[2] = IMG_Load("textures/purplestone.png");
-	texSrc[3] = IMG_Load("textures/greystone.png");
-	texSrc[4] = IMG_Load("textures/bluestone.png");
-	texSrc[5] = IMG_Load("textures/mossy.png");
-	texSrc[6] = IMG_Load("textures/wood.png");
-	texSrc[7] = IMG_Load("textures/colorstone.png");
-
-	/* get colors from texture pixels and put in array */
-	for (i = 0; i < TEX_COUNT; i++)
-	{
-		for (j = 0; j < TEX_HEIGHT; j++)
-		{
-			for (k = 0; k < TEX_WIDTH; k++)
-			{
-				pixel = (uint8_t *)texSrc[i]->pixels + k * texSrc[i]->pitch + j * texSrc[i]->format->BytesPerPixel;
-				tiles[i][j][k] = pixel[0] | pixel[1] << 8 | pixel[2] << 16;;
-			}
-		}
-	}
+        loadTextures();
 
 	/* start SDL and create window and renderer */
 	if (!initSDL())
@@ -78,9 +56,6 @@ int main(int argc, char *argv[])
 		SDL_UpdateTexture(texture, NULL, buffer, SCREEN_WIDTH * 4);
 		SDL_RenderClear(renderer);
 		SDL_RenderCopy(renderer, texture, NULL, NULL);
-
-		/* update screen */
-		/* SDL_RenderPresent(renderer); */
 
 		/* clear buffer */
 		for (x = 0; x < SCREEN_WIDTH; x++)
