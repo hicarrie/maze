@@ -149,8 +149,6 @@ void drawSlice(int *maze, SDL_Point map, point_t rayPos, point_t rayDir,
 
 	for (y = drawStart; y < drawEnd; y++)
 	{
-		if (x > SCREEN_WIDTH | y > SCREEN_HEIGHT)
-			return;
 		tex.y = ((((y << 1) - SCREEN_HEIGHT + sliceHeight) <<
 			  (int)log2(TEX_HEIGHT)) / sliceHeight) >> 1;
 
