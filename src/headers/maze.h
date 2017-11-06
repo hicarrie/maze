@@ -34,10 +34,11 @@ void closeSDL(void);
 void input(int *maze);
 bool quit(void);
 
-void loadTextures();
-void renderBG(void);
-void renderWalls(int *maze);
-void drawSlice(int *maze, SDL_Point map, point_t rayPos, point_t rayDir,
+void loadTextures(void);
+void raycaster(int *maze);
+void renderWalls(int *maze, SDL_Point map, point_t rayPos, point_t rayDir,
 	       double distToWall, int x, int side);
+void renderBG(SDL_Point map, point_t rayDir, double distToWall, double wallX,
+	      int drawEnd, int x, int side);
 
 #endif /* MAZE_H */

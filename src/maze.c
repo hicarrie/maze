@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
 	if (maze == NULL)
 		return (1);
 
-        loadTextures();
+	loadTextures();
 
 	/* start SDL and create window and renderer */
 	if (!initSDL())
@@ -44,12 +44,8 @@ int main(int argc, char *argv[])
 	/* loops until user exits by ESC or closing window */
 	while (!quit())
 	{
-		/* draw ceiling and floor */
-		renderBG();
-
-		/* draw walls */
-	        renderWalls(maze);
-
+		/* draw walls, floor, and ceiling */
+		raycaster(maze);
 
 		/* handles user input */
 		input(maze);

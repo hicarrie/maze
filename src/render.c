@@ -1,18 +1,19 @@
 #include "maze.h"
 
 /**
- * renderWalls - casts rays and renders walls
+ * raycaster - casts rays and renders walls, floor, and ceiling
  * @maze: 2D array defining maze map
  * Return: void
  */
-void renderWalls(int *maze)
+void raycaster(int *maze)
 {
 	double cameraX; /* X coordinate in camera space */
 	point_t rayPos; /* X/Y coordinates of ray pos */
 	point_t rayDir; /* direction of X/Y coordinates of ray pos */
-	point_t posToNext; /* length of ray from current pos to next X/Y sides */
+	point_t posToNext; /* length of ray from current pos to next X/Y side */
 	point_t distToNext; /* length of ray from X/Y side to next X/Y side */
 	double distToWall; /* distance from camera to wall  */
+	int wallX; /* position where wall was hit */
 
 	SDL_Point map; /* X/Y coordinates of box of maze currently in */
 	SDL_Point step; /* X/Y direction to step in - always 1 or -1 */
@@ -91,23 +92,27 @@ void renderWalls(int *maze)
 		else
 			distToWall = (map.y - rayPos.y + (1 - step.y) / 2) / rayDir.y;
 
-		/* draw wall slice */
-		drawSlice(maze, map, rayPos, rayDir, distToWall, x, side);
+		/* draw walls to buffer */
+		renderWalls(maze, map, rayPos, rayDir, distToWall, x, side);
 	}
 
-	/* draw updated buffer to renderer */
+	/* draw updated buffer with walls, floor, and ceiling to renderer */
 	updateRenderer();
 }
 
 
 /**
- * drawSlice - draws slice/column of wall
+ * renderWalls - draws slice of wall to buffer
+ * @maze: 2D array defining maze map
+ * @map: X/Y coordinates of box of maze currently in
+ * @rayPos: X/Y coordinates of ray position
+ * @rayDir: direction of X/Y coordinates of ray position
  * @distToWall: distance to wall from camera
  * @x: number of ray casted
- * Return: void
+ * @side: determines whether wall is N/S or E/W
+ * Return: oid
  */
-void drawSlice(int *maze, SDL_Point map, point_t rayPos, point_t rayDir,
-	       double distToWall, int x, int side)
+void renderWalls(int *maze, SDL_Point map, point_t rayPos, point_t rayDir, double distToWall, int x, int side)
 {
 	int sliceHeight; /* height of wall slice to draw */
 	int drawStart; /* lowest pixel of wall slice */
@@ -159,5 +164,72 @@ void drawSlice(int *maze, SDL_Point map, point_t rayPos, point_t rayDir,
 			color = (color >> 1) & 8355311;
 
 		buffer[y][x] = color;
+	}
+
+	/* draw floor and ceiling to buffer */
+	renderBG(map, rayDir, distToWall, wallX, drawEnd, x, side);
+}
+
+/**
+ * renderBG - draws floor and ceiling
+ * @map: X/Y coordinates of box of maze currently in
+ * @rayDir: direction of X/Y coordinates of ray position
+ * @distToWall: distance to wall from camera
+ * @wallX: X position of where wall was hit by raycaster
+ * @drawEnd: end position of wall slice that was drawn
+ * @x: number of ray casted
+ * @side: determines whether wall is N/S or E/W
+ * Return: void
+ */
+void renderBG(SDL_Point map, point_t rayDir, double distToWall, double wallX, int drawEnd, int x, int side)
+{
+	point_t floorWall; /* X/Y position of floor pixel at bottom of wall */
+	point_t currentFloor; /* X/Y position of current floor pixel */
+	SDL_Point floorTex; /* X/Y position corresponding to texture */
+	double weight; /* used to find pos of pixel btwn player and wall */
+	double currentDist;
+	int y;
+
+	if (side == 0 && rayDir.x > 0)
+	{
+		floorWall.x = map.x;
+		floorWall.y = map.y + wallX;
+	}
+	else if (side == 0 && rayDir.x < 0)
+	{
+		floorWall.x = map.x + 1.0;
+		floorWall.y = map.y + wallX;
+	}
+	else if (side == 1 && rayDir.y > 0)
+	{
+		floorWall.x = map.x + wallX;
+		floorWall.y = map.y;
+	}
+	else
+	{
+		floorWall.x = map.x + wallX;
+		floorWall.y = map.y + 1.0;
+	}
+
+	if (drawEnd < 0)
+		drawEnd = SCREEN_HEIGHT;
+
+	for (y = drawEnd + 1; y < SCREEN_HEIGHT; y++)
+	{
+		currentDist = SCREEN_HEIGHT / (2.0 * y - SCREEN_HEIGHT);
+
+		weight = currentDist / distToWall;
+
+		currentFloor.x = weight * floorWall.x + (1.0 - weight) * pos.x;
+		currentFloor.y = weight * floorWall.y + (1.0 - weight) * pos.y;
+
+		floorTex.x = (int)(currentFloor.x * TEX_WIDTH) % TEX_WIDTH;
+		floorTex.y = (int)(currentFloor.y * TEX_HEIGHT) % TEX_HEIGHT;
+
+		/* add floor texture to buffer */
+		buffer[y][x] = tiles[5][floorTex.y][floorTex.x] >> 1;
+
+		/* add ceiling texture to buffer */
+		buffer[SCREEN_HEIGHT - y][x] = tiles[6][floorTex.y][floorTex.x];
 	}
 }

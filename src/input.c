@@ -1,7 +1,7 @@
 #include "maze.h"
 
 /**
- * inputHandler - checks user input for movement
+ * input - checks user input for movement
  * @maze: 2D array defining maze map
  * Return: void
  */

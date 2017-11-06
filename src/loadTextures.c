@@ -6,7 +6,7 @@
  */
 void loadTextures(void)
 {
-	SDL_Surface *texSrc[TEX_COUNT]; /* array of loaded textures */
+	SDL_Surface * texSrc[TEX_COUNT]; /* array of loaded textures */
 	uint8_t *pixel; /* color value of pixel at given coordinate */
 	int i, j, k; /* loop counters */
 
@@ -31,7 +31,7 @@ void loadTextures(void)
 					texSrc[i]->format->BytesPerPixel;
 
 				tiles[i][j][k] = pixel[0] | pixel[1] << 8
-					| pixel[2] << 16;;
+					| pixel[2] << 16;
 			}
 		}
 	}
