@@ -2,7 +2,7 @@
 #define STRUCTS_H
 
 /**
- * struct point - data structure for XY point coordinates of type double
+ * struct point_s - data structure for XY point coordinates of type double
  * @x: X coordinate
  * @y: Y coordinate
  * Description: struct point
