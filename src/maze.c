@@ -15,7 +15,7 @@ double time;
  * main - renders maze
  * @argc: number of arguments
  * @argv: pointer to array of arguments
- * Return: 0 on success
+ * Return: 0 on success, 1 on failure
  */
 int main(int argc, char *argv[])
 {

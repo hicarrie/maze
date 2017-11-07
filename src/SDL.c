@@ -51,6 +51,7 @@ bool initSDL(void)
 	return (success);
 }
 
+
 /**
  * updateRenderer - updates renderer with updated buffer / texture
  * Return: void

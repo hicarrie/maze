@@ -102,6 +102,7 @@ bool quit(void)
 {
 	SDL_Event event; /* event listener */
 	bool quit;
+	uint32_t windowFlags;
 
 	quit = false;
 	while (SDL_PollEvent(&event) != 0)
@@ -111,9 +112,19 @@ bool quit(void)
 			quit = true;
 
 		/* if ESC is pressed */
-		if (event.type == SDL_KEYDOWN &&
-		    event.key.keysym.sym == SDLK_ESCAPE)
+		if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE)
 			quit = true;
+
+		/* toggles between windowed and fullscreens */
+		if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_f)
+		{
+			windowFlags = SDL_GetWindowFlags(window);
+
+			if (windowFlags & SDL_WINDOW_FULLSCREEN)
+				SDL_SetWindowFullscreen(window, SDL_FALSE);
+			else
+				SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
+		}
 	}
 
 	return (quit);
