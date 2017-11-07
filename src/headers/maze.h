@@ -27,14 +27,15 @@
 #include "global.h" /* global variables */
 
 int **parseMap(const char *filename, int *map);
+void loadTextures(void);
 
 bool initSDL(void);
+void updateRenderer(void);
 void closeSDL(void);
 
 void input(int *maze);
 bool quit(void);
 
-void loadTextures(void);
 void raycaster(int *maze);
 void renderWalls(int *maze, SDL_Point map, point_t rayPos, point_t rayDir,
 	       double distToWall, int x, int side);
