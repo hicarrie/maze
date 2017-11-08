@@ -4,7 +4,7 @@
 /* macros */
 #define SCREEN_WIDTH 1280
 #define SCREEN_HEIGHT 800
-#define TEX_COUNT 8
+#define TEX_COUNT 6
 #define TEX_WIDTH 64
 #define TEX_HEIGHT 64
 #define MAP_WIDTH 24
@@ -27,7 +27,7 @@
 #include "global.h" /* global variables */
 
 int **parseMap(const char *filename, int *map);
-void loadTextures(void);
+void loadTextures(char *mapName);
 
 bool initSDL(void);
 void updateRenderer(void);

@@ -30,16 +30,16 @@ int main(int argc, char *argv[])
 	plane.y = 0.66;
 	time = 0;
 
+	/* start SDL and create window and renderer */
+	if (!initSDL())
+		return (1);
+
 	/* parse maze file */
 	maze = parseMap(argv[1], maze);
 	if (maze == NULL)
 		return (1);
 
-	loadTextures();
-
-	/* start SDL and create window and renderer */
-	if (!initSDL())
-		return (1);
+	loadTextures(argv[1]);
 
 	/* loops until user exits by ESC or closing window */
 	while (!quit())

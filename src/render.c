@@ -126,9 +126,9 @@ void renderBG(SDL_Point map, point_t rayDir, double distToWall, double wallX, in
 		floorTex.y = (int)(currentFloor.y * TEX_HEIGHT) % TEX_HEIGHT;
 
 		/* add floor texture to buffer */
-		buffer[y][x] = tiles[5][floorTex.y][floorTex.x] >> 1;
+		buffer[y][x] = tiles[5][floorTex.y][floorTex.x];
 
 		/* add ceiling texture to buffer */
-		buffer[SCREEN_HEIGHT - y][x] = tiles[6][floorTex.y][floorTex.x];
+		buffer[SCREEN_HEIGHT - y][x] = tiles[4][floorTex.y][floorTex.x];
 	}
 }
