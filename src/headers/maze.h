@@ -26,7 +26,7 @@
 #include "structs.h" /* struct definitions */
 #include "global.h" /* global variables */
 
-int **parseMap(const char *filename, int *map);
+int **parseMap(char *filename, int *map);
 void loadTextures(char *mapName);
 
 bool initSDL(void);

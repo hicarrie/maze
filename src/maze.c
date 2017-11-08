@@ -20,6 +20,12 @@ double time;
 int main(int argc, char *argv[])
 {
 	int *maze; /* 2D array defining maze map */
+	char *mapName;
+
+	if (argv[1])
+		mapName = argv[1];
+	else
+		mapName = "maps/map_0";
 
 	/* initial values for global variables */
 	pos.x = 1;
@@ -35,11 +41,11 @@ int main(int argc, char *argv[])
 		return (1);
 
 	/* parse maze file */
-	maze = parseMap(argv[1], maze);
+	maze = parseMap(mapName, maze);
 	if (maze == NULL)
 		return (1);
 
-	loadTextures(argv[1]);
+	loadTextures(mapName);
 
 	/* loops until user exits by ESC or closing window */
 	while (!quit())
