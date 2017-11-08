@@ -1,7 +1,7 @@
 #include "maze.h"
 
 /**
- * inputHandler - checks user input for movement
+ * input - checks user input for movement
  * @maze: 2D array defining maze map
  * Return: void
  */
@@ -24,36 +24,44 @@ void input(int *maze)
 	/* move forward if no wall in front */
 	if (keystate[SDL_SCANCODE_W])
 	{
-		if (!*((int *)maze + (int)(pos.x + dir.x * moveSpeed) * MAP_WIDTH + (int)pos.y))
+		if (!*((int *)maze + (int)(pos.x + dir.x * moveSpeed)
+		       * MAP_WIDTH + (int)pos.y))
 			pos.x += dir.x * moveSpeed;
-		if (!*((int *)maze + (int)pos.x * MAP_WIDTH + (int)(pos.y + dir.y * moveSpeed)))
+		if (!*((int *)maze + (int)pos.x * MAP_WIDTH +
+		       (int)(pos.y + dir.y * moveSpeed)))
 			pos.y += dir.y * moveSpeed;
 	}
 
 	/* move backward if no wall behind */
 	if (keystate[SDL_SCANCODE_S])
 	{
-		if (!*((int *)maze + (int)(pos.x - dir.x * moveSpeed) * MAP_WIDTH + (int)(pos.y)))
+		if (!*((int *)maze + (int)(pos.x - dir.x * moveSpeed) *
+		       MAP_WIDTH + (int)(pos.y)))
 			pos.x -= dir.x * moveSpeed;
-		if (!*((int *)maze + (int)(pos.x) * MAP_WIDTH + (int)(pos.y - dir.y * moveSpeed)))
+		if (!*((int *)maze + (int)(pos.x) * MAP_WIDTH +
+		       (int)(pos.y - dir.y * moveSpeed)))
 			pos.y -= dir.y * moveSpeed;
 	}
 
 	/* strafe left */
 	if (keystate[SDL_SCANCODE_Q])
 	{
-		if (!*((int *)maze + (int)(pos.x - plane.x * moveSpeed) * MAP_WIDTH + (int)(pos.y)))
+		if (!*((int *)maze + (int)(pos.x - plane.x * moveSpeed) *
+		       MAP_WIDTH + (int)(pos.y)))
 			pos.x -= plane.x * moveSpeed;
-		if (!*((int *)maze + (int)(pos.x) * MAP_WIDTH + (int)(pos.y - plane.y * moveSpeed)))
+		if (!*((int *)maze + (int)(pos.x) * MAP_WIDTH +
+		       (int)(pos.y - plane.y * moveSpeed)))
 			pos.y -= plane.y * moveSpeed;
 	}
 
 	/* strafe right */
 	if (keystate[SDL_SCANCODE_E])
 	{
-		if (!*((int *)maze + (int)(pos.x + plane.x * moveSpeed) * MAP_WIDTH + (int)(pos.y)))
+		if (!*((int *)maze + (int)(pos.x + plane.x * moveSpeed) *
+		       MAP_WIDTH + (int)(pos.y)))
 			pos.x += plane.x * moveSpeed;
-		if (!*((int *)maze + (int)(pos.x) * MAP_WIDTH + (int)(pos.y + plane.y * moveSpeed)))
+		if (!*((int *)maze + (int)(pos.x) * MAP_WIDTH +
+		       (int)(pos.y + plane.y * moveSpeed)))
 			pos.y += plane.y * moveSpeed;
 	}
 
@@ -94,6 +102,7 @@ bool quit(void)
 {
 	SDL_Event event; /* event listener */
 	bool quit;
+	uint32_t windowFlags;
 
 	quit = false;
 	while (SDL_PollEvent(&event) != 0)
@@ -103,9 +112,19 @@ bool quit(void)
 			quit = true;
 
 		/* if ESC is pressed */
-		if (event.type == SDL_KEYDOWN &&
-		    event.key.keysym.sym == SDLK_ESCAPE)
+		if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE)
 			quit = true;
+
+		/* toggles between windowed and fullscreens */
+		if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_f)
+		{
+			windowFlags = SDL_GetWindowFlags(window);
+
+			if (windowFlags & SDL_WINDOW_FULLSCREEN)
+				SDL_SetWindowFullscreen(window, SDL_FALSE);
+			else
+				SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
+		}
 	}
 
 	return (quit);

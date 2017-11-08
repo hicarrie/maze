@@ -3,6 +3,9 @@
 /* global variables */
 SDL_Window *window;
 SDL_Renderer *renderer;
+SDL_Texture *texture;
+uint32_t buffer[SCREEN_HEIGHT][SCREEN_WIDTH];
+uint32_t tiles[TEX_COUNT][TEX_HEIGHT][TEX_WIDTH];
 point_t pos;
 point_t dir;
 point_t plane;
@@ -12,7 +15,7 @@ double time;
  * main - renders maze
  * @argc: number of arguments
  * @argv: pointer to array of arguments
- * Return: 0 on success
+ * Return: 0 on success, 1 on failure
  */
 int main(int argc, char *argv[])
 {
@@ -27,22 +30,22 @@ int main(int argc, char *argv[])
 	plane.y = 0.66;
 	time = 0;
 
-	/* parse maze file */
-	maze = parseMap(argv[1], maze);
-	if (maze == NULL)
-		return (1);
 	/* start SDL and create window and renderer */
 	if (!initSDL())
 		return (1);
 
+	/* parse maze file */
+	maze = parseMap(argv[1], maze);
+	if (maze == NULL)
+		return (1);
+
+	loadTextures(argv[1]);
+
 	/* loops until user exits by ESC or closing window */
 	while (!quit())
 	{
-		/* draw ceiling and floor */
-		renderBG();
-
-		/* draw walls */
-		renderWalls(maze);
+		/* draw walls, floor, and ceiling */
+		raycaster(maze);
 
 		/* handles user input */
 		input(maze);

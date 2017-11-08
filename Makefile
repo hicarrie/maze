@@ -14,7 +14,7 @@ RM = rm -f
 CFLAGS = -O2 -g -w -Isrc/headers
 
 # Linker flags
-LFLAGS = -lSDL2 -lm
+LFLAGS = -lSDL2 -lSDL2_image -lm
 
 # SDL Flags
 SDLFLAGS = `sdl2-config --cflags --libs`
