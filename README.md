@@ -7,7 +7,7 @@
 - [SDL2](https://www.libsdl.org/download-2.0.php) and [SDL2_image](https://www.libsdl.org/projects/SDL_image/) are required to compile and use this program
 - Compile with `gcc 4.8.4` with the following flags:
     ``gcc -O2 -g -w -Isrc/headers *.c -lSDL2 -lSDL2_image -lm -o maze `sdl2-config --cflags --libs` `` OR `make -f Makefile`
-- Run the maze: `./maze maps/<map_name>`
+- Run the maze: `./maze` or `maps/<map_name>`
 
 -----
 
@@ -58,7 +58,6 @@ Example:
 ```
 
 ### Upcoming Features
-- Option to choose between textured and untextured maze
 - More robust map parser
 - More textures
 - Enemies / obstacles
