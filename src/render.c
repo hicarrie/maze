@@ -60,7 +60,7 @@ void renderWalls(int *maze, SDL_Point map, point_t rayPos, point_t rayDir, doubl
 
 		/* change color of the wall depending on wall side */
 		if (side == 1)
-			color = (color >> 1) & 8355311;
+			color = (color >> 1) & 8355711;
 
 		buffer[y][x] = color;
 	}

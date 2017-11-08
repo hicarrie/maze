@@ -20,7 +20,7 @@ void loadTextures(char *mapName)
 		texSrc[4] = IMG_Load("textures/floorboards.png");
 		texSrc[5] = IMG_Load("textures/ceiling.png");
 	}
-	else if (strcmp(mapName, "maps/map_1") == 0)
+	else
 	{
 		texSrc[0] = IMG_Load("textures/hedge1.png");
 		texSrc[1] = IMG_Load("textures/hedge2.png");
