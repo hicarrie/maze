@@ -4,7 +4,7 @@
 -----
 
 ### How to Compile and Run
-- [SDL2](https://www.libsdl.org/download-2.0.php) is required to compile and use this program
+- [SDL2](https://www.libsdl.org/download-2.0.php) and [SDL2_image](https://www.libsdl.org/projects/SDL_image/) are required to compile and use this program
 - Compile with `gcc 4.8.4` with the following flags:
     ``gcc -O2 -g -w -Isrc/headers *.c -lSDL2 -lSDL2_image -lm -o maze `sdl2-config --cflags --libs` `` OR `make -f Makefile`
 - Run the maze: `./maze maps/<map_name>`
@@ -12,7 +12,7 @@
 -----
 
 ### Synopsis
-This 3D maze uses raycasting to draw the maze walls, utilizing [LodeV's](http://lodev.org/cgtutor/raycasting.html) method of using vectors to calculate ray length. Currently the maze has flat colors; textured walls are a work in progress.
+This 3D maze uses raycasting to draw the maze walls, utilizing [LodeV's](http://lodev.org/cgtutor/raycasting.html) method of using vectors to calculate ray length.
 
 #### Controls
 - `W` : move forward
@@ -58,6 +58,7 @@ Example:
 ```
 
 ### Upcoming Features
+- Option to choose between textured and untextured maze
 - More robust map parser
 - More textures
 - Enemies / obstacles
