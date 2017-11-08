@@ -30,14 +30,15 @@ int **parseMap(char *filename, int *map);
 void loadTextures(char *mapName);
 
 bool initSDL(void);
-void updateRenderer(void);
+void updateRenderer(bool textured);
 void closeSDL(void);
 
 void input(int *maze);
 bool quit(void);
 
-void raycaster(int *maze);
-void renderWalls(int *maze, SDL_Point map, point_t rayPos, point_t rayDir, double distToWall, int x, int side);
-void renderBG(SDL_Point map, point_t rayDir, double distToWall, double wallX, int drawEnd, int x, int side);
+void raycaster(int *maze, bool textured);
+void renderWalls(int *maze, SDL_Point map, point_t rayPos, point_t rayDir, double distToWall, int x, int side, bool textured);
+void renderBGTex(SDL_Point map, point_t rayDir, double distToWall, double wallX, int drawEnd, int x, int side);
+void renderBGFlat(void);
 
 #endif /* MAZE_H */
