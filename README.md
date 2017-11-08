@@ -1,6 +1,6 @@
 # 3D Maze
 ### Creating a 3D maze with raycasting
-![untextured_1](https://github.com/hicarrie/maze/blob/master/screenshots/untextured_1.png)
+![textured_1](https://github.com/hicarrie/maze/blob/master/screenshots/textured_1.png)
 -----
 
 ### How to Compile and Run
@@ -24,7 +24,7 @@ This 3D maze uses raycasting to draw the maze walls, utilizing [LodeV's](http://
 - `F` : toggle fullscreen
 - `ESC` : quit
 
-![untextured_1](https://github.com/hicarrie/maze/blob/master/screenshots/untextured_2.png)
+![untextured_3](https://github.com/hicarrie/maze/blob/master/screenshots/textured_3.png)
 
 #### Maps
 The maps are defined in 2D arrays in text files, which are parsed when passed as an argument to the maze executable. `0` represents open space, all other integers are drawn as walls.
@@ -58,9 +58,11 @@ Example:
 ```
 
 ### Upcoming Features
-- Textured walls, ceiling, and floor
+- More robust map parser
+- More textures
 - Enemies / obstacles
-- Goals
+- Maze goal that loads next map
+- Rain
 
 ### Resources
 - [SDL2 API](https://wiki.libsdl.org/CategoryAPI)
