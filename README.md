@@ -58,8 +58,9 @@ Example:
 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
 ```
 
-### Upcoming Features
+### To-Do
 - Improved map parser
+- Better error handling
 - More textures
 - Enemies / obstacles / objects
 - Maze goal that loads next map
