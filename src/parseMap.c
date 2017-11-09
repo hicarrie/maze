@@ -6,18 +6,12 @@
  * @map: 2D array of map information
  * Return: pointer to 2D array containing map information
  */
-int **parseMap(const char *filename, int *map)
+int *parseMap(char *filename, int *map)
 {
 	FILE *fp;
 	char row[MAP_WIDTH * 2]; /* multiply by 2 to account for spaces in map file */
 	char *number;
 	int i, j;
-
-	if (filename == NULL)
-	{
-		printf("Usage: ./maze maps/<map_name>\n");
-		return (NULL);
-	}
 
 	fp = fopen(filename, "r");
 	if (fp == NULL)

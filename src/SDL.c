@@ -8,7 +8,6 @@ bool initSDL(void)
 {
 	bool success = true;
 
-	/* SDL global variables */
 	window = NULL;
 	renderer = NULL;
 
@@ -20,9 +19,8 @@ bool initSDL(void)
 	}
 
 	window = SDL_CreateWindow("Maze", SDL_WINDOWPOS_UNDEFINED,
-				  SDL_WINDOWPOS_UNDEFINED,
-				  SCREEN_WIDTH, SCREEN_HEIGHT,
-				  SDL_WINDOW_SHOWN);
+				  SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH,
+				  SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 	if (window == NULL)
 	{
 		printf("Window could not be created! SDL_Error: %s\n",
@@ -47,30 +45,33 @@ bool initSDL(void)
 		       SDL_GetError());
 		success = false;
 	}
-
 	return (success);
 }
 
 
 /**
  * updateRenderer - updates renderer with updated buffer / texture
+ * @textured: True if user enabled textures, otherwise False
  * Return: void
  */
-void updateRenderer(void)
+void updateRenderer(bool textured)
 {
 	int x, y; /* loop counters */
 
 	/* draw buffer to renderer */
-	SDL_UpdateTexture(texture, NULL, buffer, SCREEN_WIDTH * 4);
-	SDL_RenderClear(renderer);
-	SDL_RenderCopy(renderer, texture, NULL, NULL);
-
-	/* clear buffer */
-	for (x = 0; x < SCREEN_WIDTH; x++)
+	if (textured)
 	{
-		for (y = 0; y < SCREEN_HEIGHT; y++)
+		SDL_UpdateTexture(texture, NULL, buffer, SCREEN_WIDTH * 4);
+		SDL_RenderClear(renderer);
+		SDL_RenderCopy(renderer, texture, NULL, NULL);
+
+		/* clear buffer */
+		for (x = 0; x < SCREEN_WIDTH; x++)
 		{
-			buffer[y][x] = 0;
+			for (y = 0; y < SCREEN_HEIGHT; y++)
+			{
+				buffer[y][x] = 0;
+			}
 		}
 	}
 
@@ -80,11 +81,12 @@ void updateRenderer(void)
 
 
 /**
- * closeSDL - closes renderer and window
+ * closeSDL - closes texture, renderer, and window
  * Return: void
  */
 void closeSDL(void)
 {
+	SDL_DestroyTexture(texture);
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
 	SDL_Quit();

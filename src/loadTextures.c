@@ -7,7 +7,7 @@
  */
 void loadTextures(char *mapName)
 {
-	SDL_Surface * texSrc[TEX_COUNT]; /* array of loaded textures */
+	SDL_Surface *texSrc[TEX_COUNT]; /* array of loaded textures */
 	uint8_t *pixel; /* color value of pixel at given coordinate */
 	int i, j, k; /* loop counters */
 
@@ -17,8 +17,8 @@ void loadTextures(char *mapName)
 		texSrc[1] = IMG_Load("textures/wall2.png");
 		texSrc[2] = IMG_Load("textures/windowtree.png");
 		texSrc[3] = IMG_Load("textures/windowspooky.png");
-		texSrc[4] = IMG_Load("textures/floorboards.png");
-		texSrc[5] = IMG_Load("textures/ceiling.png");
+		texSrc[4] = IMG_Load("textures/ceiling.png");
+		texSrc[5] = IMG_Load("textures/floorboards.png");
 	}
 	else
 	{

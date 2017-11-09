@@ -3,9 +3,10 @@
 /**
  * raycaster - casts rays and renders walls, floor, and ceiling
  * @maze: 2D array defining maze map
+ * @textured: True if user enabled textures, otherwise False
  * Return: void
  */
-void raycaster(int *maze)
+void raycaster(int *maze, bool textured)
 {
 	double cameraX; /* X coordinate in camera space */
 	point_t rayPos; /* X/Y coordinates of ray pos */
@@ -13,7 +14,6 @@ void raycaster(int *maze)
 	point_t posToNext; /* length of ray from current pos to next X/Y side */
 	point_t distToNext; /* length of ray from X/Y side to next X/Y side */
 	double distToWall; /* distance from camera to wall  */
-	int wallX; /* position where wall was hit */
 
 	SDL_Point map; /* X/Y coordinates of box of maze currently in */
 	SDL_Point step; /* X/Y direction to step in - always 1 or -1 */
@@ -21,7 +21,7 @@ void raycaster(int *maze)
 	int hit; /* check if wall was hit */
 	int side; /* check if wall hit was N/S or E/W */
 
-	int x, j; /* ray counter */
+	int x; /* ray counter */
 
 	/* cast ray x for every column w */
 	for (x = 0; x < SCREEN_WIDTH; x++)
@@ -93,9 +93,9 @@ void raycaster(int *maze)
 			distToWall = (map.y - rayPos.y + (1 - step.y) / 2) / rayDir.y;
 
 		/* draw walls to buffer */
-		renderWalls(maze, map, rayPos, rayDir, distToWall, x, side);
+		renderWalls(maze, map, rayPos, rayDir, distToWall, x, side, textured);
 	}
 
 	/* draw updated buffer with walls, floor, and ceiling to renderer */
-	updateRenderer();
+	updateRenderer(textured);
 }

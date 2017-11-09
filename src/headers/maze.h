@@ -13,6 +13,7 @@
 
 /* header files */
 #include <SDL.h>
+#include <SDL_image.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -26,18 +27,19 @@
 #include "structs.h" /* struct definitions */
 #include "global.h" /* global variables */
 
-int **parseMap(const char *filename, int *map);
+int *parseMap(char *filename, int *map);
 void loadTextures(char *mapName);
 
 bool initSDL(void);
-void updateRenderer(void);
+void updateRenderer(bool textured);
 void closeSDL(void);
 
 void input(int *maze);
 bool quit(void);
 
-void raycaster(int *maze);
-void renderWalls(int *maze, SDL_Point map, point_t rayPos, point_t rayDir, double distToWall, int x, int side);
-void renderBG(SDL_Point map, point_t rayDir, double distToWall, double wallX, int drawEnd, int x, int side);
+void raycaster(int *maze, bool textured);
+void renderWalls(int *maze, SDL_Point map, point_t rayPos, point_t rayDir, double distToWall, int x, int side, bool textured);
+void renderBGFlat(void);
+void renderBGTex(SDL_Point map, point_t rayDir, double distToWall, double wallX, int drawEnd, int x, int side);
 
 #endif /* MAZE_H */

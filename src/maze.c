@@ -20,6 +20,8 @@ double time;
 int main(int argc, char *argv[])
 {
 	int *maze; /* 2D array defining maze map */
+	char *mapName;
+	bool textured;
 
 	/* initial values for global variables */
 	pos.x = 1;
@@ -30,22 +32,49 @@ int main(int argc, char *argv[])
 	plane.y = 0.66;
 	time = 0;
 
+	/* check user arguments and set options */
+	mapName = "\0";
+	textured = true;
+	if (argc == 3)
+	{
+		if (strcmp(argv[2], "no_tex") == 0)
+			textured = false;
+		mapName = argv[1];
+	}
+	else if (argc == 2)
+	{
+		if (strcmp(argv[1], "no_tex") == 0)
+		{
+			mapName = "maps/map_0";
+			textured = false;
+		}
+		else
+			mapName = argv[1];
+	}
+	else if (argc == 1)
+		mapName = "maps/map_0";
+
 	/* start SDL and create window and renderer */
 	if (!initSDL())
 		return (1);
 
 	/* parse maze file */
-	maze = parseMap(argv[1], maze);
+	maze = NULL;
+	maze = parseMap(mapName, maze);
 	if (maze == NULL)
 		return (1);
 
-	loadTextures(argv[1]);
+	if (textured)
+		loadTextures(mapName);
 
 	/* loops until user exits by ESC or closing window */
 	while (!quit())
 	{
-		/* draw walls, floor, and ceiling */
-		raycaster(maze);
+		if (!textured)
+			renderBGFlat();
+
+		/* draw walls, textured floor, and textured ceiling */
+		raycaster(maze, textured);
 
 		/* handles user input */
 		input(maze);
@@ -53,8 +82,6 @@ int main(int argc, char *argv[])
 
 	/* close SDL, renderer, and window */
 	closeSDL();
-
 	free(maze);
-
 	return (0);
 }
