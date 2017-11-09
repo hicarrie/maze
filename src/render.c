@@ -21,22 +21,26 @@ void renderWalls(int *maze, SDL_Point map, point_t rayPos, point_t rayDir, doubl
 	double wallX; /* where wall was hit */
 	SDL_Point tex; /* X/Y coordinate of pixel of texture */
 	uint32_t color; /* color of pixel */
+	int width; /* current window width */
+	int height; /* current window height */
 	int y;
-
-	/* calculate height of wall slice to draw on screen */
-	sliceHeight = (int)(SCREEN_HEIGHT / distToWall);
-
-	/* calculate lowest and highest pixel of wall slice */
-	drawStart = -sliceHeight / 2 + SCREEN_HEIGHT / 2;
-	if (drawStart < 0)
-		drawStart = 0;
-
-	drawEnd = sliceHeight / 2 + SCREEN_HEIGHT / 2;
-	if (drawEnd >= SCREEN_HEIGHT)
-		drawEnd = SCREEN_HEIGHT - 1;
 
 	if (!textured) /* flat maze */
 	{
+		SDL_GetWindowSize(window, &width, &height);
+
+		/* calculate height of wall slice to draw on screen */
+		sliceHeight = (int)(height / distToWall);
+
+		/* calculate lowest and highest pixel of wall slice */
+		drawStart = -sliceHeight / 2 + height / 2;
+		if (drawStart < 0)
+			drawStart = 0;
+
+		drawEnd = sliceHeight / 2 + height / 2;
+		if (drawEnd >= height)
+			drawEnd = height - 1;
+
 		/* set wall colors depending if it's N/S or W/E */
 		if (side == 0)
 			SDL_SetRenderDrawColor(renderer, 0xF7, 0xF7, 0xF7, 0xFF);
@@ -48,6 +52,18 @@ void renderWalls(int *maze, SDL_Point map, point_t rayPos, point_t rayDir, doubl
 	}
 	else /* textured maze */
 	{
+		/* calculate height of wall slice to draw on screen */
+		sliceHeight = (int)(SCREEN_HEIGHT / distToWall);
+
+		/* calculate lowest and highest pixel of wall slice */
+		drawStart = -sliceHeight / 2 + SCREEN_HEIGHT / 2;
+		if (drawStart < 0)
+			drawStart = 0;
+
+		drawEnd = sliceHeight / 2 + SCREEN_HEIGHT / 2;
+		if (drawEnd >= SCREEN_HEIGHT)
+			drawEnd = SCREEN_HEIGHT - 1;
+
 		wallX = 0;
 		if (side == 0)
 			wallX = rayPos.y + distToWall * rayDir.y;
@@ -156,16 +172,20 @@ void renderBGFlat(void)
 {
 	SDL_Rect ceiling; /* rect for top half of window */
 	SDL_Rect floor; /* rect for bottom half of window */
+	int width; /* current window width */
+	int height; /* current window height */
+
+	SDL_GetWindowSize(window, &width, &height);
 
 	ceiling.x = 0;
 	ceiling.y = 0;
-	ceiling.w = SCREEN_WIDTH;
-	ceiling.h = SCREEN_HEIGHT / 2;
+	ceiling.w = width;
+	ceiling.h = height / 2;
 
 	floor.x = 0;
-	floor.y = SCREEN_HEIGHT / 2;
-	floor.w = SCREEN_WIDTH;
-	floor.h = SCREEN_HEIGHT / 2;
+	floor.y = height / 2;
+	floor.w = width;
+	floor.h = height / 2;
 
 	/* draw ceiling */
 	SDL_SetRenderDrawColor(renderer, 0x59, 0x85, 0x94, 0xFF);
