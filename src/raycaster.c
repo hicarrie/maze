@@ -14,7 +14,6 @@ void raycaster(int *maze, bool textured)
 	point_t posToNext; /* length of ray from current pos to next X/Y side */
 	point_t distToNext; /* length of ray from X/Y side to next X/Y side */
 	double distToWall; /* distance from camera to wall  */
-	int wallX; /* position where wall was hit */
 
 	SDL_Point map; /* X/Y coordinates of box of maze currently in */
 	SDL_Point step; /* X/Y direction to step in - always 1 or -1 */

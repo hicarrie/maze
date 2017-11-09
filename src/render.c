@@ -48,6 +48,7 @@ void renderWalls(int *maze, SDL_Point map, point_t rayPos, point_t rayDir, doubl
 	}
 	else /* textured maze */
 	{
+		wallX = 0;
 		if (side == 0)
 			wallX = rayPos.y + distToWall * rayDir.y;
 		else if (side == 1)
@@ -96,8 +97,6 @@ void renderWalls(int *maze, SDL_Point map, point_t rayPos, point_t rayDir, doubl
  */
 void renderBGTex(SDL_Point map, point_t rayDir, double distToWall, double wallX, int drawEnd, int x, int side)
 {
-	SDL_Rect ceiling; /* rect for top half of window */
-	SDL_Rect floor; /* rect for bottom half of window */
 	point_t floorWall; /* X/Y position of floor pixel at bottom of wall */
 	point_t currentFloor; /* X/Y position of current floor pixel */
 	SDL_Point floorTex; /* X/Y position corresponding to texture */

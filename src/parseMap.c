@@ -6,7 +6,7 @@
  * @map: 2D array of map information
  * Return: pointer to 2D array containing map information
  */
-int **parseMap(char *filename, int *map)
+int *parseMap(char *filename, int *map)
 {
 	FILE *fp;
 	char row[MAP_WIDTH * 2]; /* multiply by 2 to account for spaces in map file */

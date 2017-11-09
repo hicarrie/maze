@@ -33,19 +33,20 @@ int main(int argc, char *argv[])
 	time = 0;
 
 	/* check user arguments and set options */
-	textured = false;
+	mapName = "\0";
+	textured = true;
 	if (argc == 3)
 	{
-		if (strcmp(argv[2], "tex_on") == 0)
-			textured = true;
+		if (strcmp(argv[2], "no_tex") == 0)
+			textured = false;
 		mapName = argv[1];
 	}
 	else if (argc == 2)
 	{
-		if (strcmp(argv[1], "tex_on") == 0)
+		if (strcmp(argv[1], "no_tex") == 0)
 		{
 			mapName = "maps/map_0";
-			textured = true;
+			textured = false;
 		}
 		else
 			mapName = argv[1];
@@ -58,6 +59,7 @@ int main(int argc, char *argv[])
 		return (1);
 
 	/* parse maze file */
+	maze = NULL;
 	maze = parseMap(mapName, maze);
 	if (maze == NULL)
 		return (1);
