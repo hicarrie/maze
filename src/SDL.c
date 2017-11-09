@@ -81,11 +81,12 @@ void updateRenderer(bool textured)
 
 
 /**
- * closeSDL - closes renderer and window
+ * closeSDL - closes texture, renderer, and window
  * Return: void
  */
 void closeSDL(void)
 {
+	SDL_DestroyTexture(texture);
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
 	SDL_Quit();
